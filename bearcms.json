@@ -1,0 +1,17 @@
+{
+    "id": "bearcms/forums-addon",
+    "name": "Forums",
+    "description": "Forums are a great way to reach your visitors, enable discussions and solve issues they might have. You can create multiple forum categories (for different topics) and position them in every page you like. Then your visitors can create new posts for the things of interest.",
+    "author": {
+        "name": "Bear CMS",
+        "email": "support@bearcms.com",
+        "url": "https://bearcms.com/"
+    },
+    "media": [
+        {
+            "filename": "/assets/1.png",
+            "width": 1576,
+            "height": 1182
+        }
+    ]
+}
