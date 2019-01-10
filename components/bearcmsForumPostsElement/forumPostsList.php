@@ -52,12 +52,12 @@ foreach ($posts as $post) {
     }
 }
 if ($count < $posts->length) {
-    echo '<div class="bearcms-forum-posts-show-more-button-container">';
     $component = '<component src="file:' . $context->dir . '/components/bearcmsForumPostsElement/forumPostsList.php" count="' . htmlentities($count + 10) . '" categoryID="' . htmlentities($categoryID) . '" />';
     $loadMoreData = [
         'serverData' => \BearCMS\Internal\TempClientData::set(['componentHTML' => $component])
     ];
     $onClick = 'bearCMS.forumPostsElement.loadMore(event,' . json_encode($loadMoreData) . ');';
+    echo '<div class="bearcms-forum-posts-show-more-button-container">';
     echo '<a class="bearcms-forum-posts-show-more-button" href="javascript:void(0);" onclick="' . htmlentities($onClick) . '">' . __('bearcms.forumPosts.Show more') . '</a>';
     echo '</div>';
 }

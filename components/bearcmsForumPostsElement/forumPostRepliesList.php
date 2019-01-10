@@ -15,18 +15,11 @@ $forumPostID = $component->forumPostID;
 $elementID = 'frl' . md5($forumPostID);
 ?><html>
     <head>
-
         <style>
-            .bearcms-forum-post-page-reply{
-                clear:both;
-                min-height:50px;
-            }
-            .bearcms-forum-post-page-reply-image{
-                display:inline-block;
-                width:50px;
-                height:50px;
-                float:left;
-            }
+            .bearcms-forum-post-page-reply{display:block;clear:both;zoom:1;word-wrap:break-word;}
+            .bearcms-forum-post-page-reply:after{visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0;}
+            .bearcms-forum-post-page-reply-author-image{display:inline-block;float:left;}
+            .bearcms-forum-post-page-reply-date{float:right;}
         </style>
     </head>
     <body><?php

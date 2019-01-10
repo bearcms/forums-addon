@@ -48,14 +48,9 @@ $form->onSubmit = function($values) use ($component, $app) {
 ?><html>
     <head>
         <style>
-            .bearcms-new-forum-post-page-text{
-                display:block;
-                resize: none;
-            }
-            .bearcms-new-forum-post-page-send-button{
-                display:inline-block;
-                cursor: pointer;
-            }
+            .bearcms-new-forum-post-page-title-input{display:block;}
+            .bearcms-new-forum-post-page-text-input{display:block;resize:none;}
+            .bearcms-new-forum-post-page-send-button{cursor:pointer;}
         </style>
     </head>
     <body><?php
@@ -66,12 +61,12 @@ $form->onSubmit = function($values) use ($component, $app) {
         . ' onresponsereceived="bearCMS.forumPostNewForm.onFormResponseReceived(event);"'
         . '>';
         echo '<label class="bearcms-new-forum-post-page-title-label">' . __('bearcms.forumPosts.Title') . '</label>';
-        echo '<input type="text" name="fptitle" class="bearcms-new-forum-post-page-title" onfocus="bearCMS.forumPostNewForm.onFocusTitle(event);"/><br/>';
+        echo '<input type="text" name="fptitle" class="bearcms-new-forum-post-page-title-input" onfocus="bearCMS.forumPostNewForm.onFocusTitle(event);"/>';
         echo '<label class="bearcms-new-forum-post-page-text-label">' . __('bearcms.forumPosts.Content') . '</label>';
-        echo '<textarea name="fptext" class="bearcms-new-forum-post-page-text" onfocus="bearCMS.forumPostNewForm.onFocusTextarea(event);"></textarea>';
+        echo '<textarea name="fptext" class="bearcms-new-forum-post-page-text-input" onfocus="bearCMS.forumPostNewForm.onFocusTextarea(event);"></textarea>';
         echo '<span onclick="this.parentNode.submit();" class="bearcms-new-forum-post-page-send-button">' . __('bearcms.forumPosts.Post') . '</span>';
         echo '<span style="display:none;" class="bearcms-new-forum-post-page-send-button bearcms-new-forum-post-page-send-button-waiting">' . __('bearcms.forumPosts.Posting ...') . '</span>';
         echo '</form>';
-        echo '<script id="bearcms-bearframework-addon-script-7" src="' . htmlentities($context->assets->getUrl('assets/forumPostNewForm.min.js', ['cacheMaxAge' => 999999999, 'version' => 1])) . '" async></script>';
+        echo '<script id="bearcms-bearframework-addon-script-7" src="' . htmlentities($context->assets->getUrl('assets/forumPostNewForm.min.js', ['cacheMaxAge' => 999999999, 'version' => 2])) . '" async></script>';
         ?></body>
 </html>

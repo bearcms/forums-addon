@@ -25,7 +25,7 @@ bearCMS.forumPostReplyForm = (function () {
         if (showUserLoginIfNeeded(event)) {
             return;
         }
-        var listElementID = event.target.previousSibling.firstChild.id;
+        var listElementID = event.target.previousSibling.id;
         event.target.querySelector('input[type="hidden"]').value = JSON.stringify({
             'listElementID': listElementID
         });
@@ -52,15 +52,15 @@ bearCMS.forumPostReplyForm = (function () {
     var onFormRequestSent = function (event) {
         var form = event.target;
         form.querySelector('.bearcms-forum-post-page-send-button').style.display = 'none';
-        form.querySelector('.bearcms-forum-post-page-send-button-waiting').style.display = 'inline-block';
-        form.querySelector('.bearcms-forum-post-page-text').setAttribute('readonly', 'readonly');
+        form.querySelector('.bearcms-forum-post-page-send-button-waiting').style.removeProperty('display');
+        form.querySelector('.bearcms-forum-post-page-text-input').setAttribute('readonly', 'readonly');
     };
 
     var onFormResponseReceived = function (event) {
         var form = event.target;
-        form.querySelector('.bearcms-forum-post-page-send-button').style.display = 'inline-block';
+        form.querySelector('.bearcms-forum-post-page-send-button').style.removeProperty('display');
         form.querySelector('.bearcms-forum-post-page-send-button-waiting').style.display = 'none';
-        form.querySelector('.bearcms-forum-post-page-text').removeAttribute('readonly');
+        form.querySelector('.bearcms-forum-post-page-text-input').removeAttribute('readonly');
     };
 
     var onFocusTextarea = function (event) {
@@ -69,7 +69,7 @@ bearCMS.forumPostReplyForm = (function () {
         }
         var form = event.target.parentNode;
         if (form.querySelector('.bearcms-forum-post-page-send-button-waiting').style.display === 'none') {
-            form.querySelector('.bearcms-forum-post-page-send-button').style.display = 'inline-block';
+            form.querySelector('.bearcms-forum-post-page-send-button').style.removeProperty('display');
         }
     };
 

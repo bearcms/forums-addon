@@ -65,10 +65,14 @@ $app->bearCMS->addons
                             $content = '<html>';
                             $content .= '<head>';
                             $content .= '<title>' . sprintf(__('bearcms.New post in %s'), htmlspecialchars($forumCategory->name)) . '</title>';
+                            $content .= '<style>'
+                                    . '.bearcms-new-forum-post-page-title-container{word-break:break-word;}'
+                                    . '.bearcms-new-forum-post-page-content{word-break:break-word;}'
+                                    . '</style>';
                             $content .= '</head>';
                             $content .= '<body>';
-                            $content .= '<div class="bearcms-forum-post-page-title-container"><h1 class="bearcms-forum-post-page-title">' . sprintf(__('bearcms.New post in %s'), htmlspecialchars($forumCategory->name)) . '</h1></div>';
-                            $content .= '<div class="bearcms-forum-post-page-content">';
+                            $content .= '<div class="bearcms-new-forum-post-page-title-container"><h1 class="bearcms-new-forum-post-page-title">' . sprintf(__('bearcms.New post in %s'), htmlspecialchars($forumCategory->name)) . '</h1></div>';
+                            $content .= '<div class="bearcms-new-forum-post-page-content">';
                             $content .= '<component src="form" filename="' . $context->dir . '/components/bearcmsForumPostsElement/forumPostNewForm.php" categoryID="' . htmlentities($forumCategoryID) . '" />';
                             $content .= '</div>';
                             $content .= '</body>';
@@ -107,14 +111,17 @@ $app->bearCMS->addons
                             $content = '<html>';
                             $content .= '<head>';
                             $content .= '<title>' . htmlspecialchars($forumPost->title) . '</title>';
+                            $content .= '<style>'
+                                    . '.bearcms-forum-post-page-title-container{word-break:break-word;}'
+                                    . '.bearcms-forum-post-page-content{word-break:break-word;}'
+                                    . '</style>';
                             $content .= '</head>';
                             $content .= '<body>';
                             $content .= '<div class="bearcms-forum-post-page-title-container"><h1 class="bearcms-forum-post-page-title">' . htmlspecialchars($forumPost->title) . '</h1></div>';
-                            //$content .= '<div class="bearcms-forum-post-page-date-container"><div class="bearcms-forum-post-page-date">' . Internal\Localization::getDate($forumPost->createdTime) . '</div></div>';
                             $content .= '<div class="bearcms-forum-post-page-content">';
                             $content .= '<component src="file:' . $context->dir . '/components/bearcmsForumPostsElement/forumPostRepliesList.php" includePost="true" forumPostID="' . htmlentities($forumPost->id) . '" />';
-                            $content .= '</div>';
                             $content .= '<component src="form" filename="' . $context->dir . '/components/bearcmsForumPostsElement/forumPostReplyForm.php" forumPostID="' . htmlentities($forumPost->id) . '" />';
+                            $content .= '</div>';
                             $content .= '</body>';
                             $content .= '</html>';
 
@@ -131,7 +138,7 @@ $app->bearCMS->addons
                 $app->serverRequests
                 ->add('bearcms-forumposts-load-more', function($data) use ($app) {
                     if (isset($data['serverData'], $data['serverData'])) {
-                        $serverData = Internal\TempClientData::get($data['serverData']);
+                        $serverData = \BearCMS\Internal\TempClientData::get($data['serverData']);
                         if (is_array($serverData) && isset($serverData['componentHTML'])) {
                             $content = $app->components->process($serverData['componentHTML']);
                             return json_encode([
@@ -148,21 +155,24 @@ $app->bearCMS->addons
                     $groupForumPostsPost->addOption($idPrefix . "ForumPostsPostCSS", "css", '', [
                         "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
                         "cssOutput" => [
+                            ["rule", $parentSelector . " .bearcms-forum-posts-post", "box-sizing:border-box;"],
                             ["selector", $parentSelector . " .bearcms-forum-posts-post"]
                         ]
                     ]);
 
                     $groupForumPostsPostTitle = $groupForumPostsPost->addGroup(__("bearcms.themes.options.forumPosts.Title"));
                     $groupForumPostsPostTitle->addOption($idPrefix . "ForumPostsTitleCSS", "css", '', [
+                        "cssTypes" => ["cssText", "cssTextShadow"],
                         "cssOutput" => [
+                            ["rule", $parentSelector . " .bearcms-forum-posts-post-title", "text-decoration:none;"],
                             ["selector", $parentSelector . " .bearcms-forum-posts-post-title"]
                         ]
                     ]);
 
                     $groupForumPostsPostRepliesCount = $groupForumPostsPost->addGroup(__("bearcms.themes.options.forumPosts.Replies count"));
                     $groupForumPostsPostRepliesCount->addOption($idPrefix . "ForumPostsRepliesCountCSS", "css", '', [
+                        "cssTypes" => ["cssText", "cssTextShadow"],
                         "cssOutput" => [
-                            ["rule", $parentSelector . " .bearcms-forum-posts-post-replies-count", "display:inline-block;float:right;"],
                             ["selector", $parentSelector . " .bearcms-forum-posts-post-replies-count"]
                         ]
                     ]);
@@ -170,7 +180,7 @@ $app->bearCMS->addons
                     $groupForumPostsShowMoreButton = $groupForumPosts->addGroup(__("bearcms.themes.options.forumPosts.Show more button"));
                     $groupForumPostsShowMoreButton->addOption($idPrefix . "ForumPostsShowMoreButtonCSS", "css", '', [
                         "cssOutput" => [
-                            ["rule", $parentSelector . " .bearcms-forum-posts-show-more-button", "display:inline-block;"],
+                            ["rule", $parentSelector . " .bearcms-forum-posts-show-more-button", "box-sizing:border-box;display:inline-block;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;"],
                             ["selector", $parentSelector . " .bearcms-forum-posts-show-more-button"]
                         ]
                     ]);
@@ -179,6 +189,7 @@ $app->bearCMS->addons
                     $groupForumPostsShowMoreButtonContainer->addOption($idPrefix . "ForumPostsShowMoreButtonContainerCSS", "css", '', [
                         "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
                         "cssOutput" => [
+                            ["rule", $parentSelector . " .bearcms-forum-posts-show-more-button-container", "box-sizing:border-box;"],
                             ["selector", $parentSelector . " .bearcms-forum-posts-show-more-button-container"]
                         ]
                     ]);
@@ -186,7 +197,7 @@ $app->bearCMS->addons
                     $groupForumPostsNewPostButton = $groupForumPosts->addGroup(__("bearcms.themes.options.forumPosts.New post button"));
                     $groupForumPostsNewPostButton->addOption($idPrefix . "ForumPostsNewPostButtonCSS", "css", '', [
                         "cssOutput" => [
-                            ["rule", $parentSelector . " .bearcms-forum-posts-new-post-button", "display:inline-block;"],
+                            ["rule", $parentSelector . " .bearcms-forum-posts-new-post-button", "box-sizing:border-box;display:inline-block;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;"],
                             ["selector", $parentSelector . " .bearcms-forum-posts-new-post-button"]
                         ]
                     ]);
@@ -195,6 +206,7 @@ $app->bearCMS->addons
                     $groupForumPostsNewPostButtonContainer->addOption($idPrefix . "ForumPostsShowMoreButtonContainerCSS", "css", '', [
                         "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
                         "cssOutput" => [
+                            ["rule", $parentSelector . " .bearcms-forum-posts-new-post-button-container", "box-sizing:border-box;"],
                             ["selector", $parentSelector . " .bearcms-forum-posts-new-post-button-container"]
                         ]
                     ]);
@@ -203,44 +215,70 @@ $app->bearCMS->addons
                 \BearCMS\Internal\Themes::$pagesOptions['forums'] = function($context) {
                     $groupNewForumPostPage = $context->addGroup(__("bearcms.themes.options.New forum post page"));
 
-                    $groupNewForumPostPageTitleLabel = $groupNewForumPostPage->addGroup(__("bearcms.themes.options.newForumPostPage.Title label"));
-                    $groupNewForumPostPageTitleLabel->addOption("newForumPostPageTitleLabelCSS", "css", '', [
+                    $groupNewForumPostPageTitle = $groupNewForumPostPage->addGroup(__("bearcms.themes.options.forumPostPage.Title"));
+                    $groupNewForumPostPageTitle->addOption("newForumPostPageTitleCSS", "css", '', [
                         "cssOutput" => [
-                            ["rule", ".bearcms-new-forum-post-page-title-label", "display:block;"],
-                            ["selector", ".bearcms-new-forum-post-page-title-label"]
-                        ]
-                    ]);
-
-                    $groupNewForumPostPageTitleInput = $groupNewForumPostPage->addGroup(__("bearcms.themes.options.newForumPostPage.Title input"));
-                    $groupNewForumPostPageTitleInput->addOption("newForumPostPageTitleInputCSS", "css", '', [
-                        "cssTypes" => ["cssText", "cssTextShadow", "cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
-                        "cssOutput" => [
-                            ["rule", ".bearcms-new-forum-post-page-title", "box-sizing:border-box;border:0;"],
+                            ["rule", ".bearcms-new-forum-post-page-title", "box-sizing:border-box;font-weight:normal;"],
                             ["selector", ".bearcms-new-forum-post-page-title"]
                         ]
                     ]);
 
-                    $groupNewForumPostPageTextLabel = $groupNewForumPostPage->addGroup(__("bearcms.themes.options.newForumPostPage.Text label"));
+                    $groupNewForumPostPageTitleContainer = $groupNewForumPostPageTitle->addGroup(__("bearcms.themes.options.forumPostPage.Container"));
+                    $groupNewForumPostPageTitleContainer->addOption("newForumPostPageTitleContainerCSS", "css", '', [
+                        "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
+                        "cssOutput" => [
+                            ["rule", ".bearcms-new-forum-post-page-title-container", "box-sizing:border-box;"],
+                            ["selector", ".bearcms-new-forum-post-page-title-container"]
+                        ]
+                    ]);
+
+                    $groupNewForumPostPageContent = $groupNewForumPostPage->addGroup(__("bearcms.themes.options.forumPostPage.Content"));
+                    $groupNewForumPostPageContent->addOption("newForumPostPageContentCSS", "css", '', [
+                        "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
+                        "cssOutput" => [
+                            ["rule", ".bearcms-new-forum-post-page-content", "box-sizing:border-box;"],
+                            ["selector", ".bearcms-new-forum-post-page-content"]
+                        ]
+                    ]);
+
+                    $groupNewForumPostPageTitleLabel = $groupNewForumPostPageContent->addGroup(__("bearcms.themes.options.newForumPostPage.Title label"));
+                    $groupNewForumPostPageTitleLabel->addOption("newForumPostPageTitleLabelCSS", "css", '', [
+                        "cssOutput" => [
+                            ["rule", ".bearcms-new-forum-post-page-title-label", "box-sizing:border-box;display:block;"],
+                            ["selector", ".bearcms-new-forum-post-page-title-label"]
+                        ]
+                    ]);
+
+                    $groupNewForumPostPageTitleInput = $groupNewForumPostPageContent->addGroup(__("bearcms.themes.options.newForumPostPage.Title input"));
+                    $groupNewForumPostPageTitleInput->addOption("newForumPostPageTitleInputCSS", "css", '', [
+                        "cssTypes" => ["cssText", "cssTextShadow", "cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
+                        "cssOutput" => [
+                            ["rule", ".bearcms-new-forum-post-page-title-input", "box-sizing:border-box;border:0;"],
+                            ["selector", ".bearcms-new-forum-post-page-title-input"]
+                        ]
+                    ]);
+
+                    $groupNewForumPostPageTextLabel = $groupNewForumPostPageContent->addGroup(__("bearcms.themes.options.newForumPostPage.Text label"));
                     $groupNewForumPostPageTextLabel->addOption("newForumPostPageTextLabelCSS", "css", '', [
                         "cssOutput" => [
-                            ["rule", ".bearcms-new-forum-post-page-text-label", "display:block;"],
+                            ["rule", ".bearcms-new-forum-post-page-text-label", "box-sizing:border-box;display:block;"],
                             ["selector", ".bearcms-new-forum-post-page-text-label"]
                         ]
                     ]);
 
-                    $groupNewForumPostPageTextInput = $groupNewForumPostPage->addGroup(__("bearcms.themes.options.newForumPostPage.Text input"));
+                    $groupNewForumPostPageTextInput = $groupNewForumPostPageContent->addGroup(__("bearcms.themes.options.newForumPostPage.Text input"));
                     $groupNewForumPostPageTextInput->addOption("newForumPostPageTextInputCSS", "css", '', [
                         "cssTypes" => ["cssText", "cssTextShadow", "cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
                         "cssOutput" => [
-                            ["rule", ".bearcms-new-forum-post-page-text", "box-sizing:border-box;border:0;"],
-                            ["selector", ".bearcms-new-forum-post-page-text"]
+                            ["rule", ".bearcms-new-forum-post-page-text-input", "box-sizing:border-box;border:0;"],
+                            ["selector", ".bearcms-new-forum-post-page-text-input"]
                         ]
                     ]);
 
-                    $groupNewForumPostPageSendButton = $groupNewForumPostPage->addGroup(__("bearcms.themes.options.newForumPostPage.Send button"));
+                    $groupNewForumPostPageSendButton = $groupNewForumPostPageContent->addGroup(__("bearcms.themes.options.newForumPostPage.Send button"));
                     $groupNewForumPostPageSendButton->addOption("newForumPostPageSendButtonCSS", "css", '', [
                         "cssOutput" => [
-                            ["rule", ".bearcms-new-forum-post-page-send-button", "display:inline-block;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;"],
+                            ["rule", ".bearcms-new-forum-post-page-send-button", "box-sizing:border-box;display:inline-block;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;"],
                             ["selector", ".bearcms-new-forum-post-page-send-button"]
                         ]
                     ]);
@@ -248,7 +286,7 @@ $app->bearCMS->addons
                     $groupNewForumPostPageSendButtonWaiting = $groupNewForumPostPageSendButton->addGroup(__("bearcms.themes.options.newForumPostPage.Send button waiting"));
                     $groupNewForumPostPageSendButtonWaiting->addOption("newForumPostPageSendButtonWaitingCSS", "css", '', [
                         "cssOutput" => [
-                            ["rule", ".bearcms-new-forum-post-page-send-button-waiting", "display:inline-block;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;"],
+                            ["rule", ".bearcms-new-forum-post-page-send-button-waiting", "box-sizing:border-box;display:inline-block;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;"],
                             ["selector", ".bearcms-new-forum-post-page-send-button-waiting"]
                         ]
                     ]);
@@ -258,7 +296,7 @@ $app->bearCMS->addons
                     $groupForumPostPageTitle = $groupForumPostPage->addGroup(__("bearcms.themes.options.forumPostPage.Title"));
                     $groupForumPostPageTitle->addOption("forumPostPageTitleCSS", "css", '', [
                         "cssOutput" => [
-                            ["rule", ".bearcms-forum-post-page-title", "font-weight:normal;"],
+                            ["rule", ".bearcms-forum-post-page-title", "box-sizing:border-box;font-weight:normal;"],
                             ["selector", ".bearcms-forum-post-page-title"]
                         ]
                     ]);
@@ -267,22 +305,8 @@ $app->bearCMS->addons
                     $groupForumPostPageTitleContainer->addOption("forumPostPageTitleContainerCSS", "css", '', [
                         "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
                         "cssOutput" => [
+                            ["rule", ".bearcms-forum-post-page-title-container", "box-sizing:border-box;"],
                             ["selector", ".bearcms-forum-post-page-title-container"]
-                        ]
-                    ]);
-
-                    $groupForumPostPageDate = $groupForumPostPage->addGroup(__("bearcms.themes.options.forumPostPage.Date"));
-                    $groupForumPostPageDate->addOption("forumPostPageDateCSS", "css", '', [
-                        "cssOutput" => [
-                            ["selector", ".bearcms-forum-post-page-date"]
-                        ]
-                    ]);
-
-                    $groupForumPostPageDateContainer = $groupForumPostPageDate->addGroup(__("bearcms.themes.options.forumPostPage.Container"));
-                    $groupForumPostPageDateContainer->addOption("forumPostPageDateContainerCSS", "css", '', [
-                        "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
-                        "cssOutput" => [
-                            ["selector", ".bearcms-forum-post-page-date-container"]
                         ]
                     ]);
 
@@ -290,23 +314,24 @@ $app->bearCMS->addons
                     $groupForumPostPageContent->addOption("forumPostPageContentCSS", "css", '', [
                         "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
                         "cssOutput" => [
+                            ["rule", ".bearcms-forum-post-page-content", "box-sizing:border-box;"],
                             ["selector", ".bearcms-forum-post-page-content"]
                         ]
                     ]);
 
-                    $groupForumPostPageReply = $groupForumPostPage->addGroup(__("bearcms.themes.options.forumPostPage.Reply"));
+                    $groupForumPostPageReply = $groupForumPostPageContent->addGroup(__("bearcms.themes.options.forumPostPage.Reply"));
                     $groupForumPostPageReply->addOption("forumPostPageReplyCSS", "css", '', [
                         "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
                         "cssOutput" => [
-                            ["rule", ".bearcms-forum-post-page-reply", "overflow:hidden;"],
+                            ["rule", ".bearcms-forum-post-page-reply", "box-sizing:border-box;"],
                             ["selector", ".bearcms-forum-post-page-reply"]
                         ]
                     ]);
 
                     $groupForumPostPageReplyAuthorName = $groupForumPostPageReply->addGroup(__("bearcms.themes.options.forumPostPage.Author name"));
                     $groupForumPostPageReplyAuthorName->addOption("forumPostPageReplyAuthorNameCSS", "css", '', [
+                        "cssTypes" => ["cssText", "cssTextShadow"],
                         "cssOutput" => [
-                            ["rule", ".bearcms-forum-post-page-reply-author-name", "display:inline-block;"],
                             ["selector", ".bearcms-forum-post-page-reply-author-name"]
                         ]
                     ]);
@@ -315,21 +340,22 @@ $app->bearCMS->addons
                     $groupForumPostPageReplyAuthorImage->addOption("forumPostPageReplyAuthorImageCSS", "css", '', [
                         "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
                         "cssOutput" => [
-                            ["rule", ".bearcms-forum-post-page-reply-author-image", "display:inline-block;float:left;"],
+                            ["rule", ".bearcms-forum-post-page-reply-author-image", "box-sizing:border-box;"],
                             ["selector", ".bearcms-forum-post-page-reply-author-image"]
                         ]
                     ]);
 
                     $groupForumPostPageReplyDate = $groupForumPostPageReply->addGroup(__("bearcms.themes.options.forumPostPage.Date"));
                     $groupForumPostPageReplyDate->addOption("forumPostPageReplyDateCSS", "css", '', [
+                        "cssTypes" => ["cssText", "cssTextShadow"],
                         "cssOutput" => [
-                            ["rule", ".bearcms-forum-post-page-reply-date", "display:inline-block;float:right;"],
                             ["selector", ".bearcms-forum-post-page-reply-date"]
                         ]
                     ]);
 
                     $groupForumPostPageReplyText = $groupForumPostPageReply->addGroup(__("bearcms.themes.options.forumPostPage.Text"));
                     $groupForumPostPageReplyText->addOption("forumPostPageReplyTextCSS", "css", '', [
+                        "cssTypes" => ["cssText", "cssTextShadow"],
                         "cssOutput" => [
                             ["selector", ".bearcms-forum-post-page-reply-text"]
                         ]
@@ -337,25 +363,25 @@ $app->bearCMS->addons
 
                     $groupForumPostPageReplyTextLinks = $groupForumPostPageReply->addGroup(__("bearcms.themes.options.forumPostPage.Text links"));
                     $groupForumPostPageReplyTextLinks->addOption("forumPostPageReplyTextLinksCSS", "css", '', [
+                        "cssTypes" => ["cssText", "cssTextShadow"],
                         "cssOutput" => [
-                            ["rule", ".bearcms-forum-post-page-reply-text a", "display:inline-block;"],
                             ["selector", ".bearcms-forum-post-page-reply-text a"]
                         ]
                     ]);
 
-                    $groupForumPostPageTextInput = $groupForumPostPage->addGroup(__("bearcms.themes.options.forumPostPage.Text input"));
+                    $groupForumPostPageTextInput = $groupForumPostPageContent->addGroup(__("bearcms.themes.options.forumPostPage.Text input"));
                     $groupForumPostPageTextInput->addOption("forumPostPageTextInputCSS", "css", '', [
                         "cssTypes" => ["cssText", "cssTextShadow", "cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
                         "cssOutput" => [
-                            ["rule", ".bearcms-forum-post-page-text", "box-sizing:border-box;border:0;"],
-                            ["selector", ".bearcms-forum-post-page-text"]
+                            ["rule", ".bearcms-forum-post-page-text-input", "box-sizing:border-box;border:0;"],
+                            ["selector", ".bearcms-forum-post-page-text-input"]
                         ]
                     ]);
 
-                    $groupForumPostPageSendButton = $groupForumPostPage->addGroup(__("bearcms.themes.options.forumPostPage.Send button"));
+                    $groupForumPostPageSendButton = $groupForumPostPageContent->addGroup(__("bearcms.themes.options.forumPostPage.Send button"));
                     $groupForumPostPageSendButton->addOption("forumPostPageSendButtonCSS", "css", '', [
                         "cssOutput" => [
-                            ["rule", ".bearcms-forum-post-page-send-button", "display:inline-block;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;"],
+                            ["rule", ".bearcms-forum-post-page-send-button", "box-sizing:border-box;display:inline-block;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;"],
                             ["selector", ".bearcms-forum-post-page-send-button"]
                         ]
                     ]);
@@ -363,7 +389,7 @@ $app->bearCMS->addons
                     $groupForumPostPageSendButtonWaiting = $groupForumPostPageSendButton->addGroup(__("bearcms.themes.options.forumPostPage.Send button waiting"));
                     $groupForumPostPageSendButtonWaiting->addOption("forumPostPageSendButtonWaitingCSS", "css", '', [
                         "cssOutput" => [
-                            ["rule", ".bearcms-forum-post-page-send-button-waiting", "display:inline-block;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;"],
+                            ["rule", ".bearcms-forum-post-page-send-button-waiting", "box-sizing:border-box;display:inline-block;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;"],
                             ["selector", ".bearcms-forum-post-page-send-button-waiting"]
                         ]
                     ]);

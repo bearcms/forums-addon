@@ -41,15 +41,15 @@ bearCMS.forumPostNewForm = (function () {
     var onFormRequestSent = function (event) {
         var form = event.target;
         form.querySelector('.bearcms-new-forum-post-page-send-button').style.display = 'none';
-        form.querySelector('.bearcms-new-forum-post-page-send-button-waiting').style.display = 'inline-block';
-        form.querySelector('.bearcms-new-forum-post-page-text').setAttribute('readonly', 'readonly');
+        form.querySelector('.bearcms-new-forum-post-page-send-button-waiting').style.removeProperty('display');
+        form.querySelector('.bearcms-new-forum-post-page-text-input').setAttribute('readonly', 'readonly');
     };
 
     var onFormResponseReceived = function (event) {
         var form = event.target;
-        form.querySelector('.bearcms-new-forum-post-page-send-button').style.display = 'inline-block';
+        form.querySelector('.bearcms-new-forum-post-page-send-button').style.removeProperty('display');
         form.querySelector('.bearcms-new-forum-post-page-send-button-waiting').style.display = 'none';
-        form.querySelector('.bearcms-new-forum-post-page-text').removeAttribute('readonly');
+        form.querySelector('.bearcms-new-forum-post-page-text-input').removeAttribute('readonly');
     };
 
     var onFocusTextarea = function (event) {

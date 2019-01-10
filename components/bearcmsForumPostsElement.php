@@ -24,9 +24,13 @@ $content .= '<script id="bearcms-bearframework-addon-script-4" src="' . htmlenti
 
 $newPostUrl = $app->request->base . '/f/' . $categoryID . '/';
 $content .= '<div class="bearcms-forum-posts-new-post-button-container">';
-$content .= '<a class="bearcms-forum-posts-new-post-button" href="' . htmlentities($newPostUrl) . '">' . __('bearcms.forumPosts.New post') . '<a>';
+$content .= '<a class="bearcms-forum-posts-new-post-button" href="' . htmlentities($newPostUrl) . '">' . __('bearcms.forumPosts.New post') . '</a>';
 $content .= '</div>';
 $content .= '</div>';
 ?><html>
+    <head><style>
+            .bearcms-forum-posts-element{word-wrap:break-word;}
+            .bearcms-forum-posts-post-replies-count{float:right;}
+        </style></head>
     <body><?= $content ?></body>
 </html>
