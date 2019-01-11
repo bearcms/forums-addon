@@ -218,7 +218,7 @@ $app->bearCMS->addons
                     $groupNewForumPostPageTitle = $groupNewForumPostPage->addGroup(__("bearcms.themes.options.forumPostPage.Title"));
                     $groupNewForumPostPageTitle->addOption("newForumPostPageTitleCSS", "css", '', [
                         "cssOutput" => [
-                            ["rule", ".bearcms-new-forum-post-page-title", "box-sizing:border-box;font-weight:normal;"],
+                            ["rule", ".bearcms-new-forum-post-page-title", "box-sizing:border-box;font-weight:normal;padding:0;margin:0;"],
                             ["selector", ".bearcms-new-forum-post-page-title"]
                         ]
                     ]);
@@ -296,7 +296,7 @@ $app->bearCMS->addons
                     $groupForumPostPageTitle = $groupForumPostPage->addGroup(__("bearcms.themes.options.forumPostPage.Title"));
                     $groupForumPostPageTitle->addOption("forumPostPageTitleCSS", "css", '', [
                         "cssOutput" => [
-                            ["rule", ".bearcms-forum-post-page-title", "box-sizing:border-box;font-weight:normal;"],
+                            ["rule", ".bearcms-forum-post-page-title", "box-sizing:border-box;font-weight:normal;padding:0;margin:0;"],
                             ["selector", ".bearcms-forum-post-page-title"]
                         ]
                     ]);
