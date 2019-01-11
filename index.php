@@ -253,7 +253,7 @@ $app->bearCMS->addons
                     $groupNewForumPostPageTitleInput->addOption("newForumPostPageTitleInputCSS", "css", '', [
                         "cssTypes" => ["cssText", "cssTextShadow", "cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
                         "cssOutput" => [
-                            ["rule", ".bearcms-new-forum-post-page-title-input", "box-sizing:border-box;border:0;"],
+                            ["rule", ".bearcms-new-forum-post-page-title-input", "box-sizing:border-box;border:0;margin:0;padding:0;"],
                             ["selector", ".bearcms-new-forum-post-page-title-input"]
                         ]
                     ]);
@@ -270,7 +270,7 @@ $app->bearCMS->addons
                     $groupNewForumPostPageTextInput->addOption("newForumPostPageTextInputCSS", "css", '', [
                         "cssTypes" => ["cssText", "cssTextShadow", "cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
                         "cssOutput" => [
-                            ["rule", ".bearcms-new-forum-post-page-text-input", "box-sizing:border-box;border:0;"],
+                            ["rule", ".bearcms-new-forum-post-page-text-input", "box-sizing:border-box;border:0;margin:0;padding:0;"],
                             ["selector", ".bearcms-new-forum-post-page-text-input"]
                         ]
                     ]);
@@ -373,7 +373,7 @@ $app->bearCMS->addons
                     $groupForumPostPageTextInput->addOption("forumPostPageTextInputCSS", "css", '', [
                         "cssTypes" => ["cssText", "cssTextShadow", "cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
                         "cssOutput" => [
-                            ["rule", ".bearcms-forum-post-page-text-input", "box-sizing:border-box;border:0;"],
+                            ["rule", ".bearcms-forum-post-page-text-input", "box-sizing:border-box;border:0;margin:0;padding:0;"],
                             ["selector", ".bearcms-forum-post-page-text-input"]
                         ]
                     ]);
