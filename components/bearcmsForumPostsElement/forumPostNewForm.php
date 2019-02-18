@@ -9,7 +9,7 @@
 use BearFramework\App;
 
 $app = App::get();
-$context = $app->context->get(__FILE__);
+$context = $app->contexts->get(__FILE__);
 
 $form->constraints->setRequired('fptitle');
 $form->constraints->setRequired('fptext');
@@ -32,8 +32,12 @@ $form->onSubmit = function($values) use ($component, $app) {
     $status = 'approved';
     $cancel = false;
     $cancelMessage = '';
-
-    $app->hooks->execute('bearCMSForumPostAdd', $categoryID, $author, $title, $text, $status, $cancel, $cancelMessage);
+    if ($app->bearCMS->hasEventListeners('internalBeforeAddForumPost')) {
+        $eventDetails = new \BearCMS\Internal\BeforeAddForumPostEventDetails($categoryID, $author, $title, $text, $status);
+        $app->bearCMS->dispatchEvent('internalBeforeAddForumPost', $eventDetails);
+        $cancel = $eventDetails->cancel;
+        $cancelMessage = $eventDetails->cancelMessage;
+    }
     if ($cancel) {
         $this->throwError($cancelMessage);
     }
@@ -67,6 +71,6 @@ $form->onSubmit = function($values) use ($component, $app) {
         echo '<span onclick="this.parentNode.submit();" class="bearcms-new-forum-post-page-send-button">' . __('bearcms.forumPosts.Post') . '</span>';
         echo '<span style="display:none;" class="bearcms-new-forum-post-page-send-button bearcms-new-forum-post-page-send-button-waiting">' . __('bearcms.forumPosts.Posting ...') . '</span>';
         echo '</form>';
-        echo '<script id="bearcms-bearframework-addon-script-7" src="' . htmlentities($context->assets->getUrl('assets/forumPostNewForm.min.js', ['cacheMaxAge' => 999999999, 'version' => 2])) . '" async></script>';
+        echo '<script id="bearcms-bearframework-addon-script-7" src="' . htmlentities($context->assets->getURL('assets/forumPostNewForm.min.js', ['cacheMaxAge' => 999999999, 'version' => 2])) . '" async></script>';
         ?></body>
 </html>

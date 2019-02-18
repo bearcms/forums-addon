@@ -9,7 +9,7 @@
 use BearFramework\App;
 
 $app = App::get();
-$context = $app->context->get(__FILE__);
+$context = $app->contexts->get(__FILE__);
 
 $form->constraints->setRequired('fprtext');
 
@@ -35,7 +35,12 @@ $form->onSubmit = function($values) use ($component, $app, $context) {
     $cancel = false;
     $cancelMessage = '';
 
-    $app->hooks->execute('bearCMSForumPostReplyAdd', $forumPostID, $author, $text, $status, $cancel, $cancelMessage);
+    if ($app->bearCMS->hasEventListeners('internalBeforeAddForumPostReply')) {
+        $eventDetails = new \BearCMS\Internal\BeforeAddForumPostReplyEventDetails($forumPostID, $author, $text, $status);
+        $app->bearCMS->dispatchEvent('internalBeforeAddForumPostReply', $eventDetails);
+        $cancel = $eventDetails->cancel;
+        $cancelMessage = $eventDetails->cancelMessage;
+    }
     if ($cancel) {
         $this->throwError($cancelMessage);
     }
@@ -67,6 +72,6 @@ $form->onSubmit = function($values) use ($component, $app, $context) {
         echo '<span onclick="this.parentNode.submit();" class="bearcms-forum-post-page-send-button">' . __('bearcms.forumPosts.Send') . '</span>';
         echo '<span style="display:none;" class="bearcms-forum-post-page-send-button bearcms-forum-post-page-send-button-waiting">' . __('bearcms.forumPosts.Sending ...') . '</span>';
         echo '</form>';
-        echo '<script id="bearcms-bearframework-addon-script-8" src="' . htmlentities($context->assets->getUrl('assets/forumPostReplyForm.min.js', ['cacheMaxAge' => 999999999, 'version' => 2])) . '" async></script>';
+        echo '<script id="bearcms-bearframework-addon-script-8" src="' . htmlentities($context->assets->getURL('assets/forumPostReplyForm.min.js', ['cacheMaxAge' => 999999999, 'version' => 2])) . '" async></script>';
         ?></body>
 </html>

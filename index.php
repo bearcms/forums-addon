@@ -12,9 +12,9 @@ use BearFramework\App;
 $app = App::get();
 
 $app->bearCMS->addons
-        ->announce('bearcms/forums-addon', function(\BearCMS\Addons\Addon $addon) use ($app) {
+        ->register('bearcms/forums-addon', function(\BearCMS\Addons\Addon $addon) use ($app) {
             $addon->initialize = function() use ($app) {
-                $context = $app->context->get(__FILE__);
+                $context = $app->contexts->get(__FILE__);
 
                 $context->assets->addDir('assets');
 
@@ -30,14 +30,7 @@ $app->bearCMS->addons
                 });
 
                 $context->classes
-                ->add('BearCMS\Internal\Data\Models\ForumCategories', 'classes/Internal/Data/Models/ForumCategories.php')
-                ->add('BearCMS\Internal\Data\Models\ForumCategory', 'classes/Internal/Data/Models/ForumCategory.php')
-                ->add('BearCMS\Internal\Data\Models\ForumPost', 'classes/Internal/Data/Models/ForumPost.php')
-                ->add('BearCMS\Internal\Data\Models\ForumPosts', 'classes/Internal/Data/Models/ForumPosts.php')
-                ->add('BearCMS\Internal\Data\Models\ForumPostReply', 'classes/Internal/Data/Models/ForumPostReply.php')
-                ->add('BearCMS\Internal\Data\Models\ForumPostsReplies', 'classes/Internal/Data/Models/ForumPostsReplies.php')
-                ->add('BearCMS\Internal\Data\Utilities\ForumPosts', 'classes/Internal/Data/Utilities/ForumPosts.php')
-                ->add('BearCMS\Internal\Data\Utilities\ForumPostsReplies', 'classes/Internal/Data/Utilities/ForumPostsReplies.php');
+                ->add('BearCMS\*', 'classes/*.php');
 
                 \BearCMS\Internal\ElementsTypes::add('forumPosts', [
                     'componentSrc' => 'bearcms-forum-posts-element',
@@ -78,10 +71,12 @@ $app->bearCMS->addons
                             $content .= '</body>';
                             $content .= '</html>';
 
-                            $app->hooks->execute('bearCMSForumCategoryPageContentCreated', $content, $forumCategoryID);
-
-                            $response = new App\Response\HTML($app->components->process($content));
+                            $response = new App\Response\HTML($content);
                             $response->headers->set($response->headers->make('X-Robots-Tag', 'noindex'));
+                            if ($this->hasEventListeners('internalMakeNewForumPostPageResponse')) {
+                                $eventDetails = new \BearCMS\Internal\MakeNewForumPostPageResponseEventDetails($response, $forumCategoryID);
+                                $app->bearCMS->dispatchEvent('internalMakeNewForumPostPageResponse', $eventDetails);
+                            }
                             $app->bearCMS->apply($response);
                             return $response;
                         }
@@ -126,9 +121,12 @@ $app->bearCMS->addons
                             $content .= '</html>';
 
                             $forumPostID = $forumPost->id;
-                            $app->hooks->execute('bearCMSForumPostPageContentCreated', $content, $forumPostID);
 
-                            $response = new App\Response\HTML($app->components->process($content));
+                            $response = new App\Response\HTML($content);
+                            if ($this->hasEventListeners('internalMakeForumPostPageResponse')) {
+                                $eventDetails = new \BearCMS\Internal\MakeForumPostPageResponseEventDetails($response, $forumPostID);
+                                $app->bearCMS->dispatchEvent('internalMakeForumPostPageResponse', $eventDetails);
+                            }
                             $app->bearCMS->apply($response);
                             return $response;
                         }
@@ -433,7 +431,7 @@ $app->bearCMS->addons
                     if ($data['type'] !== 'all') {
                         $result->filterBy('status', $data['type']);
                     }
-                    return $result->length;
+                    return $result->count();
                 });
 
                 \BearCMS\Internal\ServerCommands::add('forumPostsList', function(array $data) {
@@ -460,7 +458,7 @@ $app->bearCMS->addons
                     if ($data['type'] !== 'all') {
                         $result->filterBy('status', $data['type']);
                     }
-                    return $result->length;
+                    return $result->count();
                 });
 
                 \BearCMS\Internal\ServerCommands::add('forumPostsRepliesList', function(array $data) {
@@ -490,7 +488,7 @@ $app->bearCMS->addons
                         if ($forumPost !== null) {
                             $list = $forumPosts->getList()
                                     ->filterBy('status', 'pendingApproval');
-                            $pendingApprovalCount = $list->length;
+                            $pendingApprovalCount = $list->count();
                             $profile = \BearCMS\Internal\PublicProfile::getFromAuthor($forumPost->author);
                             \BearCMS\Internal\Data::sendNotification('forum-posts', $forumPost->status, $profile->name, $forumPost->title, $pendingApprovalCount);
                         }
@@ -506,7 +504,7 @@ $app->bearCMS->addons
                             $forumPostsReply = $list[0];
                             $list = $forumPostsReplies->getList()
                                     ->filterBy('status', 'pendingApproval');
-                            $pendingApprovalCount = $list->length;
+                            $pendingApprovalCount = $list->count();
                             $profile = \BearCMS\Internal\PublicProfile::getFromAuthor($forumPostsReply->author);
                             \BearCMS\Internal\Data::sendNotification('forum-posts-replies', $forumPostsReply->status, $profile->name, $forumPostsReply->text, $pendingApprovalCount);
                         }

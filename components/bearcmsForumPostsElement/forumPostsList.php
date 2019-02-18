@@ -10,7 +10,7 @@
 use BearFramework\App;
 
 $app = App::get();
-$context = $app->context->get(__FILE__);
+$context = $app->contexts->get(__FILE__);
 
 $count = strlen($component->count) > 0 ? (int) $component->count : 5;
 if ($count < 1) {
@@ -37,7 +37,7 @@ $counter = 0;
 echo '<div>';
 foreach ($posts as $post) {
     $postUrl = $app->request->base . '/f/' . $post->id . '/' . $post->id . '/';
-    $repliesCount = $post->replies->length;
+    $repliesCount = $post->replies->count();
     echo '<div class="bearcms-forum-posts-post">';
     $statusText = '';
     if ($post->status === 'pendingApproval') {
@@ -51,7 +51,7 @@ foreach ($posts as $post) {
         break;
     }
 }
-if ($count < $posts->length) {
+if ($count < $posts->count()) {
     $component = '<component src="file:' . $context->dir . '/components/bearcmsForumPostsElement/forumPostsList.php" count="' . htmlentities($count + 10) . '" categoryID="' . htmlentities($categoryID) . '" />';
     $loadMoreData = [
         'serverData' => \BearCMS\Internal\TempClientData::set(['componentHTML' => $component])
