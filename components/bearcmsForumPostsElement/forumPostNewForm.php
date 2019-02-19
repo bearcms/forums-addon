@@ -35,6 +35,10 @@ $form->onSubmit = function($values) use ($component, $app) {
     if ($app->bearCMS->hasEventListeners('internalBeforeAddForumPost')) {
         $eventDetails = new \BearCMS\Internal\BeforeAddForumPostEventDetails($categoryID, $author, $title, $text, $status);
         $app->bearCMS->dispatchEvent('internalBeforeAddForumPost', $eventDetails);
+        $author = $eventDetails->author;
+        $title = $eventDetails->title;
+        $text = $eventDetails->text;
+        $status = $eventDetails->status;
         $cancel = $eventDetails->cancel;
         $cancelMessage = $eventDetails->cancelMessage;
     }
