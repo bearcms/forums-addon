@@ -73,7 +73,7 @@ $app->bearCMS->addons
 
                             $response = new App\Response\HTML($content);
                             $response->headers->set($response->headers->make('X-Robots-Tag', 'noindex'));
-                            if ($this->hasEventListeners('internalMakeNewForumPostPageResponse')) {
+                            if ($app->bearCMS->hasEventListeners('internalMakeNewForumPostPageResponse')) {
                                 $eventDetails = new \BearCMS\Internal\MakeNewForumPostPageResponseEventDetails($response, $forumCategoryID);
                                 $app->bearCMS->dispatchEvent('internalMakeNewForumPostPageResponse', $eventDetails);
                             }
@@ -85,7 +85,7 @@ $app->bearCMS->addons
                 ->add('/f/?/?/', [
                     [$app->bearCMS, 'disabledCheck'],
                     function() use ($app, $context) {
-                        $forumPostSlug = $app->request->path->getSegment(1); // todo validate
+                        //$forumPostSlug = $app->request->path->getSegment(1); // todo validate
                         $forumPostID = $app->request->path->getSegment(2);
                         $forumPosts = new \BearCMS\Internal\Data\Models\ForumPosts();
                         $forumPost = $forumPosts->get($forumPostID);
@@ -123,7 +123,7 @@ $app->bearCMS->addons
                             $forumPostID = $forumPost->id;
 
                             $response = new App\Response\HTML($content);
-                            if ($this->hasEventListeners('internalMakeForumPostPageResponse')) {
+                            if ($app->bearCMS->hasEventListeners('internalMakeForumPostPageResponse')) {
                                 $eventDetails = new \BearCMS\Internal\MakeForumPostPageResponseEventDetails($response, $forumPostID);
                                 $app->bearCMS->dispatchEvent('internalMakeForumPostPageResponse', $eventDetails);
                             }
