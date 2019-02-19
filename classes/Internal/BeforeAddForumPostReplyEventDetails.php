@@ -46,7 +46,10 @@ class BeforeAddForumPostReplyEventDetails
                     'type' => 'string'
                 ])
                 ->defineProperty('cancel', [
-                    'type' => 'bool'
+                    'type' => 'bool',
+                    'init' => function() {
+                        return false;
+                    }
                 ])
                 ->defineProperty('cancelMessage', [
                     'type' => 'string'
