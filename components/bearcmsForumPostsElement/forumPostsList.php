@@ -56,7 +56,7 @@ if ($count < $posts->count()) {
     $loadMoreData = [
         'serverData' => \BearCMS\Internal\TempClientData::set(['componentHTML' => $component])
     ];
-    $onClick = 'bearCMS.forumPostsElement.loadMore(event,' . json_encode($loadMoreData) . ');';
+    $onClick = 'bearCMS.forumPostsElement.loadMore(this,' . json_encode($loadMoreData) . ');';
     echo '<div class="bearcms-forum-posts-show-more-button-container">';
     echo '<a class="bearcms-forum-posts-show-more-button" href="javascript:void(0);" onclick="' . htmlentities($onClick) . '">' . __('bearcms.forumPosts.Show more') . '</a>';
     echo '</div>';

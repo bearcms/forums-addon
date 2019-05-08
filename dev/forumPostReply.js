@@ -1,0 +1,99 @@
+/*
+ * Bear CMS addon for Bear Framework
+ * https://bearcms.com/
+ * Copyright (c) Amplilabs Ltd.
+ * Free to use under the MIT license.
+ */
+
+/* global clientShortcuts */
+
+var bearCMS = bearCMS || {};
+bearCMS.forumPostReply = bearCMS.forumPostReply || (function () {
+
+    var temp = [];
+
+    var prepareForUserAction = function (formID) {
+        var checkKey = 'ur' + formID;
+        if (typeof temp[checkKey] !== 'undefined') {
+            return;
+        }
+        temp[checkKey] = 1;
+        var form = document.getElementById(formID);
+        clientShortcuts.get('users').then(function (users) {
+            users.currentUser.addEventListener('change', function () {
+                updateState(formID, null);
+            });
+        });
+        form.addEventListener('beforesubmit', onBeforeSubmit);
+        form.addEventListener('submitsuccess', onSubmitSuccess);
+    };
+
+    var initializeForm = function (formID, hasUser) {
+        updateState(formID, hasUser);
+        if (hasUser) {
+            return prepareForUserAction(formID); // return is neededed because of bug in closure compiler
+        }
+    };
+
+    var updateState = function (formID, hasUser) {
+        var update = function (hasCurrentUser) {
+            var form = document.getElementById(formID);
+            var textarea = form.querySelector('textarea');
+            if (hasCurrentUser) {
+                textarea.removeAttribute('readonly');
+                textarea.style.cursor = "auto";
+                textarea.removeEventListener('click', openLogin);
+                form.querySelector('.bearcms-forum-post-page-send-button').style.removeProperty('display');
+            } else {
+                textarea.setAttribute('readonly', true);
+                textarea.style.cursor = "pointer";
+                textarea.addEventListener('click', openLogin);
+                form.querySelector('.bearcms-forum-post-page-send-button').style.display = 'none';
+            }
+        };
+        if (hasUser !== null) {
+            update(hasUser);
+        } else {
+            clientShortcuts.get('users').then(function (users) {
+                update(users.currentUser.exists());
+            });
+        }
+    };
+
+    var openLogin = function (event) {
+        var formID = event.target.parentNode.parentNode.id;
+        clientShortcuts.get('users').then(function (users) {
+            prepareForUserAction(formID);
+            users.openLogin();
+        });
+    };
+
+    var updateList = function (result) {
+        clientShortcuts.get('-bearcms-forums-html5domdocument').then(function (html5DOMDocument) {
+            var listElement = document.getElementById(result.listElementID);
+            html5DOMDocument.insert(result.listContent, [listElement, 'outerHTML']);
+        });
+    };
+
+    var onBeforeSubmit = function (event) {
+        var form = event.target;
+        var elementContainer = form.previousSibling;
+        form.querySelector('[name="fprcontext"]').value = JSON.stringify({
+            'listElementID': elementContainer.id
+        });
+    };
+
+    var onSubmitSuccess = function (event) {
+        var form = event.target;
+        var result = event.result;
+        if (typeof result.success !== 'undefined') {
+            form.querySelector('[name="fprtext"]').value = '';
+            updateList(result);
+        }
+    };
+
+    return {
+        'initializeForm': initializeForm
+    };
+
+}());

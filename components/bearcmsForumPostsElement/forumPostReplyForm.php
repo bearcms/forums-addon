@@ -58,23 +58,19 @@ $form->onSubmit = function($values) use ($component, $app, $context) {
 };
 ?><html>
     <head>
+        <link rel="client-shortcuts-embed" name="-bearcms-forums-element-reply">
         <style>
             .bearcms-forum-post-page-text-input{display:block;resize:none;}
             .bearcms-forum-post-page-send-button{cursor:pointer;}
         </style>
     </head>
     <body><?php
-        echo '<form'
-        . ' onbeforesubmit="bearCMS.forumPostReplyForm.onBeforeSubmitForm(event);"'
-        . ' onsubmitdone="bearCMS.forumPostReplyForm.onSubmitFormDone(event);"'
-        . ' onrequestsent="bearCMS.forumPostReplyForm.onFormRequestSent(event);"'
-        . ' onresponsereceived="bearCMS.forumPostReplyForm.onFormResponseReceived(event);"'
-        . '>';
-        echo '<input type="hidden" name="fprcontext"/>';
-        echo '<textarea placeholder="' . __('bearcms.forumPosts.Your reply') . '" name="fprtext" class="bearcms-forum-post-page-text-input" onfocus="bearCMS.forumPostReplyForm.onFocusTextarea(event);"></textarea>';
-        echo '<span onclick="this.parentNode.submit();" class="bearcms-forum-post-page-send-button">' . __('bearcms.forumPosts.Send') . '</span>';
-        echo '<span style="display:none;" class="bearcms-forum-post-page-send-button bearcms-forum-post-page-send-button-waiting">' . __('bearcms.forumPosts.Sending ...') . '</span>';
+        $formID = 'bfrmfrm' . uniqid();
+        echo '<form id="' . $formID . '">';
+        echo '<form-element-hidden name="fprcontext" />';
+        echo '<form-element-textarea readonly="true" placeholder="' . __('bearcms.forumPosts.Your reply') . '" name="fprtext" class="bearcms-forum-post-page-text-input" />';
+        echo '<form-element-submit-button text="' . __('bearcms.forumPosts.Send') . '" waitingText="' . __('bearcms.forumPosts.Sending ...') . '" style="display:none;" class="bearcms-forum-post-page-send-button" waitingClass="bearcms-forum-post-page-send-button bearcms-forum-post-page-send-button-waiting"/>';
         echo '</form>';
-        echo '<script id="bearcms-bearframework-addon-script-8" src="' . htmlentities($context->assets->getURL('assets/forumPostReplyForm.min.js', ['cacheMaxAge' => 999999999, 'version' => 2])) . '" async></script>';
+        echo '<script>bearCMS.forumPostReply.initializeForm("' . $formID . '",' . (int) $app->currentUser->exists() . ');</script>';
         ?></body>
 </html>

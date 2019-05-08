@@ -19,18 +19,23 @@ $categoryID = $component->categoryID;
 
 $content = '<div class="bearcms-forum-posts-element">';
 $content .= '<component src="file:' . $context->dir . '/components/bearcmsForumPostsElement/forumPostsList.php" count="' . htmlentities($count) . '" categoryID="' . htmlentities($categoryID) . '" />';
-$content .= '<script id="bearcms-bearframework-addon-script-9" src="' . htmlentities($context->assets->getURL('assets/forumPostsElement.min.js', ['cacheMaxAge' => 999999999, 'version' => 1])) . '" async></script>';
-$content .= '<script id="bearcms-bearframework-addon-script-4" src="' . htmlentities($context->assets->getURL('assets/HTML5DOMDocument.min.js', ['cacheMaxAge' => 999999999, 'version' => 1])) . '" async></script>';
 
 $newPostUrl = $app->request->base . '/f/' . $categoryID . '/';
 $content .= '<div class="bearcms-forum-posts-new-post-button-container">';
-$content .= '<a class="bearcms-forum-posts-new-post-button" href="' . htmlentities($newPostUrl) . '">' . __('bearcms.forumPosts.New post') . '</a>';
+$newPostData = [
+    'serverData' => \BearCMS\Internal\TempClientData::set(['categoryID' => $categoryID])
+];
+$onClick = 'bearCMS.forumPostsElement.openNewPost(' . json_encode($newPostData) . ');';
+$content .= '<a class="bearcms-forum-posts-new-post-button" href="javascript:void(0);" onclick="' . htmlentities($onClick) . '">' . __('bearcms.forumPosts.New post') . '</a>';
 $content .= '</div>';
 $content .= '</div>';
 ?><html>
-    <head><style>
+    <head>
+        <link rel="client-shortcuts-embed" name="-bearcms-forums-element">
+        <style>
             .bearcms-forum-posts-element{word-wrap:break-word;}
             .bearcms-forum-posts-post-replies-count{float:right;}
-        </style></head>
+        </style>
+    </head>
     <body><?= $content ?></body>
 </html>

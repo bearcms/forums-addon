@@ -15,7 +15,13 @@
         "php": ">=7.1",
         "bearcms/bearframework-addon": "1.*",
         "bearframework/localization-addon": "0.2.*",
-        "ivopetkov/html-server-components-bearframework-addon": "0.2.*|0.3.*|0.4.*|0.5.*|0.6.*|0.7.*"
+        "ivopetkov/html-server-components-bearframework-addon": "0.2.*|0.3.*|0.4.*|0.5.*|0.6.*|0.7.*",
+        "ivopetkov/form-bearframework-addon": "0.3.*",
+        "ivopetkov/users-bearframework-addon": "0.4.*",
+        "ivopetkov/server-requests-bearframework-addon": "0.4.*",
+        "ivopetkov/client-shortcuts-bearframework-addon": "0.1.*",
+        "ivopetkov/form-elements-bearframework-addon": "0.1.*",
+        "ivopetkov/js-lightbox-bearframework-addon": "0.4.*"
     },
     "autoload": {
         "files": ["autoload.php"]
