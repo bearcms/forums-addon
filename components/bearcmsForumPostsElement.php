@@ -20,7 +20,6 @@ $categoryID = $component->categoryID;
 $content = '<div class="bearcms-forum-posts-element">';
 $content .= '<component src="file:' . $context->dir . '/components/bearcmsForumPostsElement/forumPostsList.php" count="' . htmlentities($count) . '" categoryID="' . htmlentities($categoryID) . '" />';
 
-$newPostUrl = $app->request->base . '/f/' . $categoryID . '/';
 $content .= '<div class="bearcms-forum-posts-new-post-button-container">';
 $newPostData = [
     'serverData' => \BearCMS\Internal\TempClientData::set(['categoryID' => $categoryID])

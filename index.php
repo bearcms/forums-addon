@@ -51,46 +51,17 @@ $app->bearCMS->addons
                 ->add('/f/?/', [
                     [$app->bearCMS, 'disabledCheck'],
                     function() use ($app, $context) {
-                        $forumCategoryID = $app->request->path->getSegment(1);
-                        $forumCategories = new \BearCMS\Internal\Data\Models\ForumCategories();
-                        $forumCategory = $forumCategories->get($forumCategoryID);
-                        if ($forumCategory !== null) {
-                            $content = '<html>';
-                            $content .= '<head>';
-                            $content .= '<title>' . sprintf(__('bearcms.New post in %s'), htmlspecialchars($forumCategory->name)) . '</title>';
-                            $content .= '<style>'
-                                    . '.bearcms-new-forum-post-page-title-container{word-break:break-word;}'
-                                    . '.bearcms-new-forum-post-page-content{word-break:break-word;}'
-                                    . '</style>';
-                            $content .= '</head>';
-                            $content .= '<body>';
-                            $content .= '<div class="bearcms-new-forum-post-page-title-container"><h1 class="bearcms-new-forum-post-page-title">' . sprintf(__('bearcms.New post in %s'), htmlspecialchars($forumCategory->name)) . '</h1></div>';
-                            $content .= '<div class="bearcms-new-forum-post-page-content">';
-                            $content .= '<component src="form" filename="' . $context->dir . '/components/bearcmsForumPostsElement/forumPostNewForm.php" categoryID="' . htmlentities($forumCategoryID) . '" />';
-                            $content .= '</div>';
-                            $content .= '</body>';
-                            $content .= '</html>';
-
-                            $response = new App\Response\HTML($content);
-                            $response->headers->set($response->headers->make('X-Robots-Tag', 'noindex'));
-                            if ($app->bearCMS->hasEventListeners('internalMakeNewForumPostPageResponse')) {
-                                $eventDetails = new \BearCMS\Internal\MakeNewForumPostPageResponseEventDetails($response, $forumCategoryID);
-                                $app->bearCMS->dispatchEvent('internalMakeNewForumPostPageResponse', $eventDetails);
-                            }
-                            $app->bearCMS->apply($response);
-                            return $response;
-                        }
-                    }
-                ])
-                ->add('/f/?/?/', [
-                    [$app->bearCMS, 'disabledCheck'],
-                    function() use ($app, $context) {
-                        //$forumPostSlug = $app->request->path->getSegment(1); // todo validate
-                        $forumPostID = $app->request->path->getSegment(2);
+                        $forumPostSlug = $app->request->path->getSegment(1);
+                        $forumPostID = BearCMS\Internal\Utilities::getIDFromSlug($forumPostSlug);
                         $forumPosts = new \BearCMS\Internal\Data\Models\ForumPosts();
                         $forumPost = $forumPosts->get($forumPostID);
                         if ($forumPost !== null) {
-
+                            $realSlug = \BearCMS\Internal\Utilities::getSlug($forumPost->id, $forumPost->title);
+                            if ($realSlug !== $forumPostSlug) {
+                                $newUrl = $app->urls->get('/f/' . $realSlug . '/');
+                                $response = new App\Response\PermanentRedirect($newUrl);
+                                return $response;
+                            }
                             $render = false;
                             if ($forumPost->status === 'approved') {
                                 $render = true;
