@@ -30,7 +30,7 @@ $content .= '</div>';
 $content .= '</div>';
 ?><html>
     <head>
-        <link rel="client-shortcuts-embed" name="-bearcms-forums-element">
+        <link rel="client-packages-embed" name="-bearcms-forums-element">
         <style>
             .bearcms-forum-posts-element{word-wrap:break-word;}
             .bearcms-forum-posts-post-replies-count{float:right;}

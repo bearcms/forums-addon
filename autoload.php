@@ -15,7 +15,7 @@ BearFramework\Addons::register('bearcms/forums-addon', __DIR__, [
         'ivopetkov/form-bearframework-addon',
         'ivopetkov/users-bearframework-addon',
         'ivopetkov/server-requests-bearframework-addon',
-        'ivopetkov/client-shortcuts-bearframework-addon',
+        'ivopetkov/client-packages-bearframework-addon',
         'ivopetkov/form-elements-bearframework-addon',
         'ivopetkov/js-lightbox-bearframework-addon'
     ]

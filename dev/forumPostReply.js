@@ -1,11 +1,11 @@
 /*
- * Bear CMS addon for Bear Framework
- * https://bearcms.com/
+ * Forums addon for Bear CMS
+ * https://github.com/bearcms/forums-addon
  * Copyright (c) Amplilabs Ltd.
  * Free to use under the MIT license.
  */
 
-/* global clientShortcuts */
+/* global clientPackages */
 
 var bearCMS = bearCMS || {};
 bearCMS.forumPostReply = bearCMS.forumPostReply || (function () {
@@ -19,7 +19,7 @@ bearCMS.forumPostReply = bearCMS.forumPostReply || (function () {
         }
         temp[checkKey] = 1;
         var form = document.getElementById(formID);
-        clientShortcuts.get('users').then(function (users) {
+        clientPackages.get('users').then(function (users) {
             users.currentUser.addEventListener('change', function () {
                 updateState(formID, null);
             });
@@ -54,7 +54,7 @@ bearCMS.forumPostReply = bearCMS.forumPostReply || (function () {
         if (hasUser !== null) {
             update(hasUser);
         } else {
-            clientShortcuts.get('users').then(function (users) {
+            clientPackages.get('users').then(function (users) {
                 update(users.currentUser.exists());
             });
         }
@@ -62,14 +62,14 @@ bearCMS.forumPostReply = bearCMS.forumPostReply || (function () {
 
     var openLogin = function (event) {
         var formID = event.target.parentNode.parentNode.id;
-        clientShortcuts.get('users').then(function (users) {
+        clientPackages.get('users').then(function (users) {
             prepareForUserAction(formID);
             users.openLogin();
         });
     };
 
     var updateList = function (result) {
-        clientShortcuts.get('-bearcms-forums-html5domdocument').then(function (html5DOMDocument) {
+        clientPackages.get('-bearcms-forums-html5domdocument').then(function (html5DOMDocument) {
             var listElement = document.getElementById(result.listElementID);
             html5DOMDocument.insert(result.listContent, [listElement, 'outerHTML']);
         });

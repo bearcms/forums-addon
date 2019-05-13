@@ -58,7 +58,7 @@ $form->onSubmit = function($values) use ($component, $app, $context) {
 };
 ?><html>
     <head>
-        <link rel="client-shortcuts-embed" name="-bearcms-forums-element-reply">
+        <link rel="client-packages-embed" name="-bearcms-forums-element-reply">
         <style>
             .bearcms-forum-post-page-text-input{display:block;resize:none;}
             .bearcms-forum-post-page-send-button{cursor:pointer;}

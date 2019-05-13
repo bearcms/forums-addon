@@ -494,28 +494,26 @@ $app->bearCMS->addons
                     });
                 }
 
-                $app->clientShortcuts
-                ->add('-bearcms-forums-element', function(IvoPetkov\BearFrameworkAddons\ClientShortcut $shortcut) {
-                    $shortcut->requirements[] = [// taken from dev/forumPostsElement.js // file_get_contents(__DIR__ . '/dev/forumPostsElement.js')
-                        'type' => 'text',
-                        'value' => 'var bearCMS=bearCMS||{};bearCMS.forumPostsElement=bearCMS.forumPostsElement||function(){var e=function(a,b){clientShortcuts.get("-bearcms-forums-html5domdocument").then(function(c){c.insert(a,[b,"outerHTML"])})},f=function(a,b){clientShortcuts.get("serverRequests").then(function(c){c.send("-bearcms-forums-new-post-form",a).then(function(a){a=JSON.parse(a);"undefined"!==typeof a.html&&b.open(a.html)})})};return{loadMore:function(a,b){a.innerHTML+=" ...";var c=a.parentNode.parentNode;clientShortcuts.get("serverRequests").then(function(a){var d=[];d.serverData=b.serverData;a.send("-bearcms-forumposts-load-more",d).then(function(a){a=JSON.parse(a);e(a.html,c)})})},openNewPost:function(a){clientShortcuts.get("lightbox").then(function(b){b.wait(function(b){clientShortcuts.get("users").then(function(c){c.currentUser.exists()?f(a,b):c.openLogin()})})})}}}();',
-                        'mimeType' => 'text/javascript'
-                    ];
+                $app->clientPackages
+                ->add('-bearcms-forums-element', 1, function(IvoPetkov\BearFrameworkAddons\ClientPackage $package) {
+                    //$js = file_get_contents(__DIR__ . '/dev/forumPostsElement.js');
+                    $js = include __DIR__ . '/assets/forumPostsElement.min.js.php';
+                    $package->addJSCode($js);
+                    $package->preparePackage('-bearcms-forums-html5domdocument');
+                    $package->preparePackage('serverRequests');
+                    $package->embedPackage('lightbox');
+                    $package->preparePackage('users');
                 })
-                ->add('-bearcms-forums-element-reply', function(IvoPetkov\BearFrameworkAddons\ClientShortcut $shortcut) {
-                    $shortcut->requirements[] = [// taken from dev/forumPostReply.js // file_get_contents(__DIR__ . '/dev/forumPostReply.js')
-                        'type' => 'text',
-                        'value' => 'var bearCMS=bearCMS||{};bearCMS.forumPostReply=bearCMS.forumPostReply||function(){var e=[],g=function(a){var b="ur"+a;"undefined"===typeof e[b]&&(e[b]=1,b=document.getElementById(a),clientShortcuts.get("users").then(function(b){b.currentUser.addEventListener("change",function(){f(a,null)})}),b.addEventListener("beforesubmit",k),b.addEventListener("submitsuccess",l))},f=function(a,b){var c=function(b){var c=document.getElementById(a),d=c.querySelector("textarea");b?(d.removeAttribute("readonly"),d.style.cursor="auto",d.removeEventListener("click",h),c.querySelector(".bearcms-forum-post-page-send-button").style.removeProperty("display")):(d.setAttribute("readonly",!0),d.style.cursor="pointer",d.addEventListener("click",h),c.querySelector(".bearcms-forum-post-page-send-button").style.display="none")};null!==b?c(b):clientShortcuts.get("users").then(function(a){c(a.currentUser.exists())})},h=function(a){var b=a.target.parentNode.parentNode.id;clientShortcuts.get("users").then(function(a){g(b);a.openLogin()})},m=function(a){clientShortcuts.get("-bearcms-forums-html5domdocument").then(function(b){var c=document.getElementById(a.listElementID);b.insert(a.listContent,[c,"outerHTML"])})},k=function(a){a=a.target;var b=a.previousSibling;a.querySelector(\'[name="fprcontext"]\').value=JSON.stringify({listElementID:b.id})},l=function(a){var b=a.target;a=a.result;"undefined"!==typeof a.success&&(b.querySelector(\'[name="fprtext"]\').value="",m(a))};return{initializeForm:function(a,b){f(a,b);if(b)return g(a)}}}();',
-                        'mimeType' => 'text/javascript'
-                    ];
+                ->add('-bearcms-forums-element-reply', 1, function(IvoPetkov\BearFrameworkAddons\ClientPackage $package) {
+                    //$js = file_get_contents(__DIR__ . '/dev/forumPostReply.js');
+                    $js = include __DIR__ . '/assets/forumPostReply.min.js.php';
+                    $package->addJSCode($js);
+                    $package->preparePackage('-bearcms-forums-html5domdocument');
+                    $package->preparePackage('users');
                 })
-                ->add('-bearcms-forums-html5domdocument', function($shortcut) use ($context) {
-                    $shortcut->requirements[] = [
-                        'type' => 'file',
-                        'url' => $context->assets->getURL('assets/HTML5DOMDocument.min.js', ['cacheMaxAge' => 999999999, 'version' => 1]),
-                        'mimeType' => 'text/javascript'
-                    ];
-                    $shortcut->get = 'return html5DOMDocument;';
+                ->add('-bearcms-forums-html5domdocument', 1, function($package) use ($context) {
+                    $package->addJSFile($context->assets->getURL('assets/public/HTML5DOMDocument.min.js', ['cacheMaxAge' => 999999999, 'version' => 1]));
+                    $package->get = 'return html5DOMDocument;';
                 });
             };
         });

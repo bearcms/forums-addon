@@ -5,13 +5,13 @@
  * Free to use under the MIT license.
  */
 
-/* global clientShortcuts */
+/* global clientPackages */
 
 var bearCMS = bearCMS || {};
 bearCMS.forumPostsElement = bearCMS.forumPostsElement || (function () {
 
     var updateList = function (content, listElement) {
-        clientShortcuts.get('-bearcms-forums-html5domdocument').then(function (html5DOMDocument) {
+        clientPackages.get('-bearcms-forums-html5domdocument').then(function (html5DOMDocument) {
             html5DOMDocument.insert(content, [listElement, 'outerHTML']);
         });
     };
@@ -19,7 +19,7 @@ bearCMS.forumPostsElement = bearCMS.forumPostsElement || (function () {
     var loadMore = function (button, data) {
         button.innerHTML += " ...";
         var listElement = button.parentNode.parentNode;
-        clientShortcuts.get('serverRequests').then(function (serverRequests) {
+        clientPackages.get('serverRequests').then(function (serverRequests) {
             var requestData = [];
             requestData['serverData'] = data['serverData'];
             serverRequests.send('-bearcms-forumposts-load-more', requestData).then(function (responseText) {
@@ -30,7 +30,7 @@ bearCMS.forumPostsElement = bearCMS.forumPostsElement || (function () {
     };
 
     var _openNewPost = function (newPostServerData, lightboxContext) {
-        clientShortcuts.get('serverRequests').then(function (serverRequests) {
+        clientPackages.get('serverRequests').then(function (serverRequests) {
             serverRequests.send('-bearcms-forums-new-post-form', newPostServerData).then(function (responseText) {
                 var result = JSON.parse(responseText);
                 if (typeof result.html !== 'undefined') {
@@ -41,16 +41,14 @@ bearCMS.forumPostsElement = bearCMS.forumPostsElement || (function () {
     };
 
     var openNewPost = function (newPostServerData) {
-        clientShortcuts.get('lightbox').then(function (lightbox) {
-            lightbox.wait(function (context) {
-                clientShortcuts.get('users').then(function (users) {
-                    if (users.currentUser.exists()) {
-                        _openNewPost(newPostServerData, context);
-                    } else {
-                        users.openLogin();
-                    }
-                });
-
+        clientPackages.get('lightbox').then(function (lightbox) {
+            var context = lightbox.make();
+            clientPackages.get('users').then(function (users) {
+                if (users.currentUser.exists()) {
+                    _openNewPost(newPostServerData, context);
+                } else {
+                    users.openLogin();
+                }
             });
         });
     };
