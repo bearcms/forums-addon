@@ -13,9 +13,10 @@ $app = App::get();
 
 $app->bearCMS->addons
         ->register('bearcms/forums-addon', function(\BearCMS\Addons\Addon $addon) use ($app) {
-            $addon->initialize = function() use ($app) {
+            $addon->initialize = function(array $options) use ($app) {
+                $forumPagesPathPrefix = isset($options['forumPagesPathPrefix']) ? $options['forumPagesPathPrefix'] : '/f/';
+                
                 $context = $app->contexts->get(__FILE__);
-
                 $context->assets->addDir('assets');
 
                 $app->localization
@@ -31,6 +32,8 @@ $app->bearCMS->addons
 
                 $context->classes
                 ->add('BearCMS\*', 'classes/*.php');
+                
+                BearCMS\Internal\ForumsData::$forumPagesPathPrefix = $forumPagesPathPrefix;
 
                 \BearCMS\Internal\ElementsTypes::add('forumPosts', [
                     'componentSrc' => 'bearcms-forum-posts-element',
@@ -48,7 +51,7 @@ $app->bearCMS->addons
                 ]);
 
                 $app->routes
-                ->add('/f/?/', [
+                ->add($forumPagesPathPrefix.'?/', [
                     [$app->bearCMS, 'disabledCheck'],
                     function() use ($app, $context) {
                         $forumPostSlug = $app->request->path->getSegment(1);
@@ -58,7 +61,7 @@ $app->bearCMS->addons
                         if ($forumPost !== null) {
                             $realSlug = \BearCMS\Internal\Utilities::getSlug($forumPost->id, $forumPost->title);
                             if ($realSlug !== $forumPostSlug) {
-                                $newUrl = $app->urls->get('/f/' . $realSlug . '/');
+                                $newUrl = $app->urls->get($forumPagesPathPrefix . $realSlug . '/');
                                 $response = new App\Response\PermanentRedirect($newUrl);
                                 return $response;
                             }
@@ -122,6 +125,7 @@ $app->bearCMS->addons
                         if (is_array($serverData) && isset($serverData['categoryID'])) {
                             $forumCategoryID = (string) $serverData['categoryID'];
                             $content = $app->components->process('<component src="form" filename="' . $context->dir . '/components/bearcmsForumPostsElement/forumPostNewForm.php" categoryID="' . htmlentities($forumCategoryID) . '" />');
+                            $content = $app->clientPackages->process($content);
                             return json_encode([
                                 'html' => $content
                             ]);

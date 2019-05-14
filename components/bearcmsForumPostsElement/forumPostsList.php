@@ -36,7 +36,7 @@ $posts = $forumPosts->getList()
 $counter = 0;
 echo '<div>';
 foreach ($posts as $post) {
-    $postUrl = $app->urls->get('/f/' . \BearCMS\Internal\Utilities::getSlug($post->id, $post->title) . '/');
+    $postUrl = $app->urls->get(BearCMS\Internal\ForumsData::$forumPagesPathPrefix . \BearCMS\Internal\Utilities::getSlug($post->id, $post->title) . '/');
     $repliesCount = $post->replies->count();
     echo '<div class="bearcms-forum-posts-post">';
     $statusText = '';

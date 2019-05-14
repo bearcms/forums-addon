@@ -50,7 +50,7 @@ $form->onSubmit = function($values) use ($component, $app) {
     $slug = \BearCMS\Internal\Utilities::getSlug($forumPostID, $title);
     return [
         'success' => 1,
-        'redirectUrl' => $app->urls->get('/f/' . $slug . '/')
+        'redirectUrl' => $app->urls->get(BearCMS\Internal\ForumsData::$forumPagesPathPrefix . $slug . '/')
     ];
 };
 ?><html>
