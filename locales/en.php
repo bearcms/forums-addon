@@ -53,11 +53,4 @@ return [
     'bearcms.themes.options.forumPostPage.Text input' => 'Text input',
     'bearcms.themes.options.forumPostPage.Send button' => 'Send button',
     'bearcms.themes.options.forumPostPage.Send button waiting' => 'Send button waiting',
-    'bearcms.themes.options.New forum post page' => 'New forum post',
-    'bearcms.themes.options.newForumPostPage.Title label' => 'Title label',
-    'bearcms.themes.options.newForumPostPage.Title input' => 'Title input',
-    'bearcms.themes.options.newForumPostPage.Text label' => 'Content label',
-    'bearcms.themes.options.newForumPostPage.Text input' => 'Content input',
-    'bearcms.themes.options.newForumPostPage.Send button' => 'Send button',
-    'bearcms.themes.options.newForumPostPage.Send button waiting' => 'Send button waiting',
 ];

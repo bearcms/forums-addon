@@ -53,11 +53,4 @@ return [
     'bearcms.themes.options.forumPostPage.Text input' => 'Поле за отговор',
     'bearcms.themes.options.forumPostPage.Send button' => 'Бутон за изпращане',
     'bearcms.themes.options.forumPostPage.Send button waiting' => 'Изчакване...',
-    'bearcms.themes.options.New forum post page' => 'Нова тема във форума',
-    'bearcms.themes.options.newForumPostPage.Title label' => 'Име на полето за заглавие',
-    'bearcms.themes.options.newForumPostPage.Title input' => 'Поле за заглавие',
-    'bearcms.themes.options.newForumPostPage.Text label' => 'Име на полето за съдържание',
-    'bearcms.themes.options.newForumPostPage.Text input' => 'Поле за съдържание',
-    'bearcms.themes.options.newForumPostPage.Send button' => 'Бутон за изпращане',
-    'bearcms.themes.options.newForumPostPage.Send button waiting' => 'Изчакване...',
 ];
