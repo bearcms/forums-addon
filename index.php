@@ -15,7 +15,7 @@ $app->bearCMS->addons
         ->register('bearcms/forums-addon', function(\BearCMS\Addons\Addon $addon) use ($app) {
             $addon->initialize = function(array $options) use ($app) {
                 $forumPagesPathPrefix = isset($options['forumPagesPathPrefix']) ? $options['forumPagesPathPrefix'] : '/f/';
-                
+
                 $context = $app->contexts->get(__FILE__);
                 $context->assets->addDir('assets');
 
@@ -32,7 +32,7 @@ $app->bearCMS->addons
 
                 $context->classes
                 ->add('BearCMS\*', 'classes/*.php');
-                
+
                 BearCMS\Internal\ForumsData::$forumPagesPathPrefix = $forumPagesPathPrefix;
 
                 \BearCMS\Internal\ElementsTypes::add('forumPosts', [
@@ -51,7 +51,7 @@ $app->bearCMS->addons
                 ]);
 
                 $app->routes
-                ->add($forumPagesPathPrefix.'?/', [
+                ->add($forumPagesPathPrefix . '?/', [
                     [$app->bearCMS, 'disabledCheck'],
                     function() use ($app, $context) {
                         $forumPostSlug = $app->request->path->getSegment(1);
@@ -198,7 +198,7 @@ $app->bearCMS->addons
                 };
 
                 \BearCMS\Internal\Themes::$pagesOptions['forums'] = function($context) {
-                    
+
                     $groupForumPostPage = $context->addGroup(__("bearcms.themes.options.Forum post page"));
 
                     $groupForumPostPageTitle = $groupForumPostPage->addGroup(__("bearcms.themes.options.forumPostPage.Title"));
@@ -422,23 +422,18 @@ $app->bearCMS->addons
                 }
 
                 $app->clientPackages
-                ->add('-bearcms-forums-element', 1, function(IvoPetkov\BearFrameworkAddons\ClientPackage $package) {
+                ->add('-bearcms-forums-element', function(IvoPetkov\BearFrameworkAddons\ClientPackage $package) {
                     //$js = file_get_contents(__DIR__ . '/dev/forumPostsElement.js');
                     $js = include __DIR__ . '/assets/forumPostsElement.min.js.php';
                     $package->addJSCode($js);
-                    $package->preparePackage('-bearcms-forums-html5domdocument');
-                    $package->preparePackage('serverRequests');
                     $package->embedPackage('lightbox');
-                    $package->preparePackage('users');
                 })
-                ->add('-bearcms-forums-element-reply', 1, function(IvoPetkov\BearFrameworkAddons\ClientPackage $package) {
+                ->add('-bearcms-forums-element-reply', function(IvoPetkov\BearFrameworkAddons\ClientPackage $package) {
                     //$js = file_get_contents(__DIR__ . '/dev/forumPostReply.js');
                     $js = include __DIR__ . '/assets/forumPostReply.min.js.php';
                     $package->addJSCode($js);
-                    $package->preparePackage('-bearcms-forums-html5domdocument');
-                    $package->preparePackage('users');
                 })
-                ->add('-bearcms-forums-html5domdocument', 1, function($package) use ($context) {
+                ->add('-bearcms-forums-html5domdocument', function($package) use ($context) {
                     $package->addJSFile($context->assets->getURL('assets/public/HTML5DOMDocument.min.js', ['cacheMaxAge' => 999999999, 'version' => 1]));
                     $package->get = 'return html5DOMDocument;';
                 });

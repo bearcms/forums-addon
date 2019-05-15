@@ -16,7 +16,6 @@ $elementID = 'frl' . md5($forumPostID);
 ?><html>
     <head>
         <link rel="client-packages-embed" name="lightbox">
-        <link rel="client-packages-prepare" name="users">
         <style>
             .bearcms-forum-post-page-reply{display:block;clear:both;zoom:1;word-wrap:break-word;}
             .bearcms-forum-post-page-reply:after{visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0;}

@@ -19,7 +19,7 @@
         "ivopetkov/form-bearframework-addon": "0.3.*",
         "ivopetkov/users-bearframework-addon": "0.4.*",
         "ivopetkov/server-requests-bearframework-addon": "0.4.*",
-        "ivopetkov/client-packages-bearframework-addon": "0.1.*",
+        "ivopetkov/client-packages-bearframework-addon": "0.2.*",
         "ivopetkov/form-elements-bearframework-addon": "0.2.*",
         "ivopetkov/js-lightbox-bearframework-addon": "0.5.*"
     },
