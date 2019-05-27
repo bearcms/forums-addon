@@ -44,11 +44,13 @@ bearCMS.forumPostsElement = bearCMS.forumPostsElement || (function () {
         clientPackages.get('lightbox').then(function (lightbox) {
             var context = lightbox.make();
             clientPackages.get('users').then(function (users) {
-                if (users.currentUser.exists()) {
-                    _openNewPost(newPostServerData, context);
-                } else {
-                    users.openLogin();
-                }
+                users.currentUser.exists().then(function (exists) {
+                    if (exists) {
+                        _openNewPost(newPostServerData, context);
+                    } else {
+                        users.openLogin();
+                    }
+                });
             });
         });
     };
