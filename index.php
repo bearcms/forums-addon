@@ -53,7 +53,7 @@ $app->bearCMS->addons
                 $app->routes
                 ->add($forumPagesPathPrefix . '?/', [
                     [$app->bearCMS, 'disabledCheck'],
-                    function() use ($app, $context) {
+                    function() use ($app, $context, $forumPagesPathPrefix) {
                         $forumPostSlug = $app->request->path->getSegment(1);
                         $forumPostID = BearCMS\Internal\Utilities::getIDFromSlug($forumPostSlug);
                         $forumPosts = new \BearCMS\Internal\Data\Models\ForumPosts();
