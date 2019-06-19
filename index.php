@@ -46,6 +46,10 @@ $app->bearCMS->addons
                         [
                             'id' => 'count',
                             'type' => 'number'
+                        ],
+                        [
+                            'id' => 'showRepliesCount',
+                            'type' => 'number'
                         ]
                     ]
                 ]);

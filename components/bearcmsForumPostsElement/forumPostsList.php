@@ -16,6 +16,7 @@ $count = strlen($component->count) > 0 ? (int) $component->count : 5;
 if ($count < 1) {
     $count = 1;
 }
+$showRepliesCount = strlen($component->showRepliesCount) > 0 ? (int) $component->showRepliesCount > 0 : true;
 $categoryID = $component->categoryID;
 
 $forumPosts = new \BearCMS\Internal\Data\Models\ForumPosts();
@@ -44,7 +45,9 @@ foreach ($posts as $post) {
         $statusText = ' (' . __('bearcms.forumPosts.pending approval') . ')';
     }
     echo '<a class="bearcms-forum-posts-post-title" href="' . htmlentities($postUrl) . '">' . htmlspecialchars($post->title) . $statusText . '</a>';
-    echo '<div class="bearcms-forum-posts-post-replies-count">' . ($repliesCount === 1 ? __('bearcms.forumPosts.1 reply') : sprintf(__('bearcms.forumPosts.%s replies'), $repliesCount)) . '</div>';
+    if ($showRepliesCount) {
+        echo '<div class="bearcms-forum-posts-post-replies-count">' . ($repliesCount === 1 ? __('bearcms.forumPosts.1 reply') : sprintf(__('bearcms.forumPosts.%s replies'), $repliesCount)) . '</div>';
+    }
     echo '</div>';
     $counter++;
     if ($counter >= $count) {
