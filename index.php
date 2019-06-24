@@ -110,6 +110,22 @@ $app->bearCMS->addons
                         }
                     }
                 ]);
+                if (class_exists('\BearCMS\Internal\Sitemap')) {
+                    \BearCMS\Internal\Sitemap::register(function(\BearCMS\Internal\Sitemap\Sitemap $sitemap) use ($app) {
+                        $forumPosts = new \BearCMS\Internal\Data\Models\ForumPosts();
+                        $posts = $forumPosts->getList()
+                                ->filter(function($forumPost) {
+                            if ($forumPost->status === 'approved') {
+                                return true;
+                            }
+                            return false;
+                        });
+                        foreach ($posts as $post) {
+                            $postUrl = $app->urls->get(BearCMS\Internal\ForumsData::$forumPagesPathPrefix . \BearCMS\Internal\Utilities::getSlug($post->id, $post->title) . '/');
+                            $sitemap->addURL($postUrl);
+                        }
+                    });
+                }
 
                 $app->serverRequests
                 ->add('-bearcms-forumposts-load-more', function($data) use ($app) {
