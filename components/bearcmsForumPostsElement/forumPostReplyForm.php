@@ -30,7 +30,7 @@ $form->onSubmit = function($values) use ($component, $app, $context) {
         'provider' => $app->currentUser->provider,
         'id' => $app->currentUser->id
     ];
-    $text = $values['fprtext'];
+    $text = trim($values['fprtext']);
     $status = 'approved';
     $cancel = false;
     $cancelMessage = '';

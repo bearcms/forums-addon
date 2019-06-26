@@ -27,8 +27,8 @@ $form->onSubmit = function($values) use ($component, $app) {
         'provider' => $app->currentUser->provider,
         'id' => $app->currentUser->id
     ];
-    $title = $values['fptitle'];
-    $text = $values['fptext'];
+    $title = trim($values['fptitle']);
+    $text = trim($values['fptext']);
     $status = 'approved';
     $cancel = false;
     $cancelMessage = '';
