@@ -57,6 +57,9 @@ class ForumPostsReplies
         }
 
         \BearCMS\Internal\Data::setChanged($dataKey);
+
+        $eventDetails = new \BearCMS\Internal\AddForumPostReplyEventDetails($forumPostID, $forumPostReplyID);
+        $app->bearCMS->dispatchEvent('internalAddForumPostReply', $eventDetails);
     }
 
     /**
