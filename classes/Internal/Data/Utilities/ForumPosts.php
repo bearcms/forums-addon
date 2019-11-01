@@ -30,6 +30,7 @@ class ForumPosts
     {
         $app = App::get();
         $id = md5(uniqid());
+        $currentTime = time();
         $data = [
             'id' => $id,
             'status' => $status,
@@ -37,10 +38,11 @@ class ForumPosts
             'title' => $title,
             'text' => $text,
             'categoryID' => $categoryID,
-            'createdTime' => time()
+            'createdTime' => $currentTime,
+            'lastChangeTime' => $currentTime
         ];
 
-        $dataKey = 'bearcms/forums/posts/post/' . md5($id) . '.json';
+        $dataKey = self::getDataKey($id);
         $app->data->set($app->data->make($dataKey, json_encode($data)));
 
         if (\BearCMS\Internal\Config::hasFeature('NOTIFICATIONS')) {
@@ -48,11 +50,10 @@ class ForumPosts
                 $app->tasks->add('bearcms-send-new-forum-post-notification', [
                     'categoryID' => $categoryID,
                     'forumPostID' => $id
-                        ], ['id' => 'bearcms-send-new-forum-post-notification']);
+                ], ['id' => 'bearcms-send-new-forum-post-notification']);
             }
         }
 
-        \BearCMS\Internal\Data::setChanged($dataKey);
         return $id;
     }
 
@@ -65,7 +66,7 @@ class ForumPosts
     static function setStatus(string $forumPostID, string $status): void
     {
         $app = App::get();
-        $dataKey = 'bearcms/forums/posts/post/' . md5($forumPostID) . '.json';
+        $dataKey = self::getDataKey($forumPostID);
         $data = $app->data->getValue($dataKey);
         $hasChange = false;
         if ($data !== null) {
@@ -75,8 +76,23 @@ class ForumPosts
         }
         if ($hasChange) {
             $app->data->set($app->data->make($dataKey, json_encode($forumPostData)));
-            \BearCMS\Internal\Data::setChanged($dataKey);
         }
     }
 
+    static function getDataKey(string $id)
+    {
+        return 'bearcms/forums/posts/post/' . md5($id) . '.json';
+    }
+
+    static function getLastModifiedDetails(string $forumPostID)
+    {
+        $details = ['dates' => [], 'dataKeys' => []];
+        $details['dataKeys'][] = self::getDataKey($forumPostID);
+        $forumPosts = new \BearCMS\Internal\Data\Models\ForumPosts();
+        $forumPost = $forumPosts->get($forumPostID);
+        if ($forumPost !== null) {
+            $details['dates'][] = $forumPost->lastChangeTime;
+        }
+        return $details;
+    }
 }

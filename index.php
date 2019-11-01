@@ -8,6 +8,7 @@
  */
 
 use BearFramework\App;
+use BearCMS\Internal;
 
 $app = App::get();
 
@@ -33,9 +34,9 @@ $app->bearCMS->addons
             $context->classes
                 ->add('BearCMS\*', 'classes/*.php');
 
-            BearCMS\Internal\ForumsData::$forumPagesPathPrefix = $forumPagesPathPrefix;
+            Internal\ForumsData::$forumPagesPathPrefix = $forumPagesPathPrefix;
 
-            \BearCMS\Internal\ElementsTypes::add('forumPosts', [
+            Internal\ElementsTypes::add('forumPosts', [
                 'componentSrc' => 'bearcms-forum-posts-element',
                 'componentFilename' => $context->dir . '/components/bearcmsForumPostsElement.php',
                 'fields' => [
@@ -59,11 +60,11 @@ $app->bearCMS->addons
                     [$app->bearCMS, 'disabledCheck'],
                     function () use ($app, $context, $forumPagesPathPrefix) {
                         $forumPostSlug = $app->request->path->getSegment(1);
-                        $forumPostID = BearCMS\Internal\Utilities::getIDFromSlug($forumPostSlug);
-                        $forumPosts = new \BearCMS\Internal\Data\Models\ForumPosts();
+                        $forumPostID = Internal\Utilities::getIDFromSlug($forumPostSlug);
+                        $forumPosts = new Internal\Data\Models\ForumPosts();
                         $forumPost = $forumPosts->get($forumPostID);
                         if ($forumPost !== null) {
-                            $realSlug = \BearCMS\Internal\Utilities::getSlug($forumPost->id, $forumPost->title);
+                            $realSlug = Internal\Utilities::getSlug($forumPost->id, $forumPost->title);
                             if ($realSlug !== $forumPostSlug) {
                                 $newUrl = $app->urls->get($forumPagesPathPrefix . $realSlug . '/');
                                 $response = new App\Response\PermanentRedirect($newUrl);
@@ -102,7 +103,7 @@ $app->bearCMS->addons
 
                             $response = new App\Response\HTML($content);
                             if ($app->bearCMS->hasEventListeners('internalMakeForumPostPageResponse')) {
-                                $eventDetails = new \BearCMS\Internal\MakeForumPostPageResponseEventDetails($response, $forumPostID);
+                                $eventDetails = new Internal\MakeForumPostPageResponseEventDetails($response, $forumPostID);
                                 $app->bearCMS->dispatchEvent('internalMakeForumPostPageResponse', $eventDetails);
                             }
                             $app->bearCMS->apply($response);
@@ -111,8 +112,8 @@ $app->bearCMS->addons
                     }
                 ]);
             if (class_exists('\BearCMS\Internal\Sitemap')) {
-                \BearCMS\Internal\Sitemap::register(function (\BearCMS\Internal\Sitemap\Sitemap $sitemap) use ($app) {
-                    $forumPosts = new \BearCMS\Internal\Data\Models\ForumPosts();
+                Internal\Sitemap::register(function (Internal\Sitemap\Sitemap $sitemap) use ($app) {
+                    $forumPosts = new Internal\Data\Models\ForumPosts();
                     $posts = $forumPosts->getList()
                         ->filter(function ($forumPost) {
                             if ($forumPost->status === 'approved') {
@@ -121,8 +122,13 @@ $app->bearCMS->addons
                             return false;
                         });
                     foreach ($posts as $post) {
-                        $postUrl = $app->urls->get(BearCMS\Internal\ForumsData::$forumPagesPathPrefix . \BearCMS\Internal\Utilities::getSlug($post->id, $post->title) . '/');
-                        $sitemap->addURL($postUrl);
+                        $forumPostID = $post->id;
+                        $url = $app->urls->get(Internal\ForumsData::$forumPagesPathPrefix . Internal\Utilities::getSlug($forumPostID, $post->title) . '/');
+                        $sitemap->addURL($url, function () use ($forumPostID, $url) {
+                            $details = Internal\Data\Utilities\ForumPosts::getLastModifiedDetails($forumPostID);
+                            Internal\Sitemap::addLastModifiedDetails($url, $details);
+                            return Internal\Sitemap::getDateFromLastModifiedDetails($details);
+                        });
                     }
                 });
             }
@@ -130,7 +136,7 @@ $app->bearCMS->addons
             $app->serverRequests
                 ->add('-bearcms-forumposts-load-more', function ($data) use ($app) {
                     if (isset($data['serverData'], $data['serverData'])) {
-                        $serverData = \BearCMS\Internal\TempClientData::get($data['serverData']);
+                        $serverData = Internal\TempClientData::get($data['serverData']);
                         if (is_array($serverData) && isset($serverData['componentHTML'])) {
                             $content = $app->components->process($serverData['componentHTML']);
                             return json_encode([
@@ -141,7 +147,7 @@ $app->bearCMS->addons
                 })
                 ->add('-bearcms-forums-new-post-form', function ($data) use ($app, $context) {
                     if (isset($data['serverData'], $data['serverData'])) {
-                        $serverData = \BearCMS\Internal\TempClientData::get($data['serverData']);
+                        $serverData = Internal\TempClientData::get($data['serverData']);
                         if (is_array($serverData) && isset($serverData['categoryID'])) {
                             $forumCategoryID = (string) $serverData['categoryID'];
                             $content = $app->components->process('<component src="form" filename="' . $context->dir . '/components/bearcmsForumPostsElement/forumPostNewForm.php" categoryID="' . htmlentities($forumCategoryID) . '" />');
@@ -153,7 +159,7 @@ $app->bearCMS->addons
                     }
                 });
 
-            \BearCMS\Internal\Themes::$elementsOptions['forumPosts'] = function ($context, $idPrefix, $parentSelector) {
+            Internal\Themes::$elementsOptions['forumPosts'] = function ($context, $idPrefix, $parentSelector) {
                 $groupForumPosts = $context->addGroup(__("bearcms.themes.options.Forum posts"));
 
                 $groupForumPostsPost = $groupForumPosts->addGroup(__("bearcms.themes.options.forumPosts.Post"));
@@ -217,7 +223,7 @@ $app->bearCMS->addons
                 ]);
             };
 
-            \BearCMS\Internal\Themes::$pagesOptions['forums'] = function ($context) {
+            Internal\Themes::$pagesOptions['forums'] = function ($context) {
 
                 $groupForumPostPage = $context->addGroup(__("bearcms.themes.options.Forum post page"));
 
@@ -323,9 +329,9 @@ $app->bearCMS->addons
                 ]);
             };
 
-            \BearCMS\Internal\ServerCommands::add('forumCategories', function () {
-                $list = \BearCMS\Internal\Data::getList('bearcms/forums/categories/category/');
-                $structure = \BearCMS\Internal\Data::getValue('bearcms/forums/categories/structure.json');
+            Internal\ServerCommands::add('forumCategories', function () {
+                $list = Internal\Data::getList('bearcms/forums/categories/category/');
+                $structure = Internal\Data::getValue('bearcms/forums/categories/structure.json');
                 $temp = [];
                 $temp['structure'] = $structure !== null ? json_decode($structure, true) : [];
                 $temp['categories'] = [];
@@ -335,28 +341,28 @@ $app->bearCMS->addons
                 return $temp;
             });
 
-            \BearCMS\Internal\ServerCommands::add('forumPostGet', function (array $data) {
-                $forumPosts = new \BearCMS\Internal\Data\Models\ForumPosts();
+            Internal\ServerCommands::add('forumPostGet', function (array $data) {
+                $forumPosts = new Internal\Data\Models\ForumPosts();
                 $result = $forumPosts->get($data['forumPostID']);
-                $result->author = \BearCMS\Internal\PublicProfile::getFromAuthor($result->author)->toArray();
+                $result->author = Internal\PublicProfile::getFromAuthor($result->author)->toArray();
                 $result->replies = new \IvoPetkov\DataList();
                 return $result->toArray();
             });
 
-            \BearCMS\Internal\ServerCommands::add('forumPostReplyDelete', function (array $data) {
-                \BearCMS\Internal\Data\Utilities\ForumPostsReplies::deleteReplyForever($data['forumPostID'], $data['replyID']);
+            Internal\ServerCommands::add('forumPostReplyDelete', function (array $data) {
+                Internal\Data\Utilities\ForumPostsReplies::deleteReplyForever($data['forumPostID'], $data['replyID']);
             });
 
-            \BearCMS\Internal\ServerCommands::add('forumPostReplySetStatus', function (array $data) {
-                \BearCMS\Internal\Data\Utilities\ForumPostsReplies::setStatus($data['forumPostID'], $data['replyID'], $data['status']);
+            Internal\ServerCommands::add('forumPostReplySetStatus', function (array $data) {
+                Internal\Data\Utilities\ForumPostsReplies::setStatus($data['forumPostID'], $data['replyID'], $data['status']);
             });
 
-            \BearCMS\Internal\ServerCommands::add('forumPostSetStatus', function (array $data) {
-                \BearCMS\Internal\Data\Utilities\ForumPosts::setStatus($data['forumPostID'], $data['status']);
+            Internal\ServerCommands::add('forumPostSetStatus', function (array $data) {
+                Internal\Data\Utilities\ForumPosts::setStatus($data['forumPostID'], $data['status']);
             });
 
-            \BearCMS\Internal\ServerCommands::add('forumPostsCount', function (array $data) {
-                $forumPosts = new \BearCMS\Internal\Data\Models\ForumPosts();
+            Internal\ServerCommands::add('forumPostsCount', function (array $data) {
+                $forumPosts = new Internal\Data\Models\ForumPosts();
                 $result = $forumPosts->getList();
                 if ($data['type'] !== 'all') {
                     $result->filterBy('status', $data['type']);
@@ -364,8 +370,8 @@ $app->bearCMS->addons
                 return $result->count();
             });
 
-            \BearCMS\Internal\ServerCommands::add('forumPostsList', function (array $data) {
-                $forumPosts = new \BearCMS\Internal\Data\Models\ForumPosts();
+            Internal\ServerCommands::add('forumPostsList', function (array $data) {
+                $forumPosts = new Internal\Data\Models\ForumPosts();
                 $result = $forumPosts->getList();
                 $result->sortBy('createdTime', 'desc');
                 if ($data['type'] !== 'all') {
@@ -374,13 +380,13 @@ $app->bearCMS->addons
                 $result = $result->slice($data['limit'] * ($data['page'] - 1), $data['limit']);
                 foreach ($result as $i => $item) {
                     $result[$i]->location = '';
-                    $result[$i]->author = \BearCMS\Internal\PublicProfile::getFromAuthor($item->author)->toArray();
+                    $result[$i]->author = Internal\PublicProfile::getFromAuthor($item->author)->toArray();
                 }
                 return $result->toArray();
             });
 
-            \BearCMS\Internal\ServerCommands::add('forumPostsRepliesCount', function (array $data) {
-                $forumPostsReplies = new \BearCMS\Internal\Data\Models\ForumPostsReplies();
+            Internal\ServerCommands::add('forumPostsRepliesCount', function (array $data) {
+                $forumPostsReplies = new Internal\Data\Models\ForumPostsReplies();
                 $result = $forumPostsReplies->getList();
                 if (isset($data['forumPostID']) && strlen($data['forumPostID']) > 0) {
                     $result->filterBy('forumPostID', $data['forumPostID']);
@@ -391,8 +397,8 @@ $app->bearCMS->addons
                 return $result->count();
             });
 
-            \BearCMS\Internal\ServerCommands::add('forumPostsRepliesList', function (array $data) {
-                $forumPostsReplies = new \BearCMS\Internal\Data\Models\ForumPostsReplies();
+            Internal\ServerCommands::add('forumPostsRepliesList', function (array $data) {
+                $forumPostsReplies = new Internal\Data\Models\ForumPostsReplies();
                 $result = $forumPostsReplies->getList();
                 $result->sortBy('createdTime', 'desc');
                 if (isset($data['forumPostID']) && strlen($data['forumPostID']) > 0) {
@@ -404,29 +410,29 @@ $app->bearCMS->addons
                 $result = $result->slice($data['limit'] * ($data['page'] - 1), $data['limit']);
                 foreach ($result as $i => $item) {
                     $result[$i]->location = '';
-                    $result[$i]->author = \BearCMS\Internal\PublicProfile::getFromAuthor($item->author)->toArray();
+                    $result[$i]->author = Internal\PublicProfile::getFromAuthor($item->author)->toArray();
                 }
                 return $result->toArray();
             });
 
-            if (\BearCMS\Internal\Config::hasFeature('NOTIFICATIONS')) {
+            if (Internal\Config::hasFeature('NOTIFICATIONS')) {
                 $app->tasks
                     ->define('bearcms-send-new-forum-post-notification', function ($data) {
                         $forumPostID = $data['forumPostID'];
-                        $forumPosts = new \BearCMS\Internal\Data\Models\ForumPosts();
+                        $forumPosts = new Internal\Data\Models\ForumPosts();
                         $forumPost = $forumPosts->get($forumPostID);
                         if ($forumPost !== null) {
                             $list = $forumPosts->getList()
                                 ->filterBy('status', 'pendingApproval');
                             $pendingApprovalCount = $list->count();
-                            $profile = \BearCMS\Internal\PublicProfile::getFromAuthor($forumPost->author);
-                            \BearCMS\Internal\Data::sendNotification('forum-posts', $forumPost->status, $profile->name, $forumPost->title, $pendingApprovalCount);
+                            $profile = Internal\PublicProfile::getFromAuthor($forumPost->author);
+                            Internal\Data::sendNotification('forum-posts', $forumPost->status, $profile->name, $forumPost->title, $pendingApprovalCount);
                         }
                     })
                     ->define('bearcms-send-new-forum-post-reply-notification', function ($data) {
                         $forumPostID = $data['forumPostID'];
                         $forumPostReplyID = $data['forumPostReplyID'];
-                        $forumPostsReplies = new \BearCMS\Internal\Data\Models\ForumPostsReplies();
+                        $forumPostsReplies = new Internal\Data\Models\ForumPostsReplies();
                         $list = $forumPostsReplies->getList()
                             ->filterBy('forumPostID', $forumPostID)
                             ->filterBy('id', $forumPostReplyID);
@@ -435,8 +441,8 @@ $app->bearCMS->addons
                             $list = $forumPostsReplies->getList()
                                 ->filterBy('status', 'pendingApproval');
                             $pendingApprovalCount = $list->count();
-                            $profile = \BearCMS\Internal\PublicProfile::getFromAuthor($forumPostsReply->author);
-                            \BearCMS\Internal\Data::sendNotification('forum-posts-replies', $forumPostsReply->status, $profile->name, $forumPostsReply->text, $pendingApprovalCount);
+                            $profile = Internal\PublicProfile::getFromAuthor($forumPostsReply->author);
+                            Internal\Data::sendNotification('forum-posts-replies', $forumPostsReply->status, $profile->name, $forumPostsReply->text, $pendingApprovalCount);
                         }
                     });
             }

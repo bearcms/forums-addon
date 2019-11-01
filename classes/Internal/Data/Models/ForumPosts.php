@@ -19,7 +19,7 @@ class ForumPosts
     {
         $rawData = json_decode($rawData, true);
         $user = new \BearCMS\Internal\Data\Models\ForumPost();
-        $properties = ['id', 'status', 'author', 'title', 'text', 'categoryID', 'createdTime', 'replies'];
+        $properties = ['id', 'status', 'author', 'title', 'text', 'categoryID', 'createdTime', 'replies', 'lastChangeTime'];
         foreach ($properties as $property) {
             if ($property === 'replies') {
                 $temp = new \IvoPetkov\DataList();

@@ -45,6 +45,7 @@ class ForumPostsReplies
             'text' => $text,
             'createdTime' => time()
         ];
+        $data['lastChangeTime'] = time();
         $app->data->set($app->data->make($dataKey, json_encode($data)));
 
         if (\BearCMS\Internal\Config::hasFeature('NOTIFICATIONS')) {
@@ -52,11 +53,9 @@ class ForumPostsReplies
                 $app->tasks->add('bearcms-send-new-forum-post-reply-notification', [
                     'forumPostID' => $forumPostID,
                     'forumPostReplyID' => $forumPostReplyID
-                        ], ['id' => 'bearcms-send-new-forum-post-reply-notification']);
+                ], ['id' => 'bearcms-send-new-forum-post-reply-notification']);
             }
         }
-
-        \BearCMS\Internal\Data::setChanged($dataKey);
 
         $eventDetails = new \BearCMS\Internal\AddForumPostReplyEventDetails($forumPostID, $forumPostReplyID);
         $app->bearCMS->dispatchEvent('internalAddForumPostReply', $eventDetails);
@@ -92,8 +91,8 @@ class ForumPostsReplies
             }
         }
         if ($hasChange) {
+            $forumPostData['lastChangeTime'] = time();
             $app->data->set($app->data->make($dataKey, json_encode($forumPostData)));
-            \BearCMS\Internal\Data::setChanged($dataKey);
         }
     }
 
@@ -122,10 +121,9 @@ class ForumPostsReplies
             }
         }
         if ($hasChange) {
+            $forumPostData['lastChangeTime'] = time();
             $forumPostData['replies'] = array_values($forumPostData['replies']);
             $app->data->set($app->data->make($dataKey, json_encode($forumPostData)));
-            \BearCMS\Internal\Data::setChanged($dataKey);
         }
     }
-
 }

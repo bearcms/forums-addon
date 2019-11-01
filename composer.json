@@ -1,7 +1,11 @@
 {
     "name": "bearcms/forums-addon",
     "description": "Forums addon for Bear CMS",
-    "keywords": ["forums", "element", "Bear CMS"],
+    "keywords": [
+        "forums",
+        "element",
+        "Bear CMS"
+    ],
     "homepage": "https://github.com/bearcms/forums-addon",
     "license": "MIT",
     "authors": [
@@ -13,7 +17,7 @@
     ],
     "require": {
         "php": ">=7.1",
-        "bearcms/bearframework-addon": "^1.1",
+        "bearcms/bearframework-addon": "^1.8",
         "bearframework/localization-addon": "0.2.*",
         "ivopetkov/html-server-components-bearframework-addon": "0.2.*|0.3.*|0.4.*|0.5.*|0.6.*|0.7.*",
         "ivopetkov/form-bearframework-addon": "0.3.*",
@@ -24,6 +28,8 @@
         "ivopetkov/js-lightbox-bearframework-addon": "0.5.*"
     },
     "autoload": {
-        "files": ["autoload.php"]
+        "files": [
+            "autoload.php"
+        ]
     }
 }

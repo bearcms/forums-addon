@@ -18,6 +18,7 @@ namespace BearCMS\Internal\Data\Models;
  * @property string $categoryID
  * @property ?int $createdTime
  * @property \IvoPetkov\DataList|\BearCMS\Internal\Data\Models\ForumPostReply[] $replies
+ * @property ?int $lastChangeTime
  * @internal
  */
 class ForumPost
@@ -51,10 +52,12 @@ class ForumPost
         ]);
         $this->defineProperty('replies', [
             'type' => '\IvoPetkov\DataList',
-            'init' => function() {
+            'init' => function () {
                 return new \IvoPetkov\DataList();
             }
         ]);
+        $this->defineProperty('lastChangeTime', [
+            'type' => '?int'
+        ]);
     }
-
 }
