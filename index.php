@@ -82,11 +82,19 @@ $app->bearCMS->addons
                                 return;
                             }
 
+                            $strlen = function (string $string) {
+                                return function_exists('mb_strlen') ? mb_strlen($string) : strlen($string);
+                            };
+
+                            $substr = function (string $string, int $start, int $length = null) {
+                                return function_exists('mb_substr') ? mb_substr($string, $start, $length) : substr($string, $start, $length);
+                            };
+
                             $content = '<html>';
                             $content .= '<head>';
                             $content .= '<title>' . htmlspecialchars($forumPost->title) . '</title>';
                             $descriptionContent = $forumPost->text;
-                            $content .= '<meta name="description" content="' . htmlentities(substr($descriptionContent, 0, 200) . (strlen($descriptionContent) > 200 ? ' ...' : '')) . '">';
+                            $content .= '<meta name="description" content="' . htmlentities($substr($descriptionContent, 0, 200) . ($strlen($descriptionContent) > 200 ? ' ...' : '')) . '">';
                             $content .= '<style>'
                                 . '.bearcms-forum-post-page-title-container{word-break:break-word;}'
                                 . '.bearcms-forum-post-page-content{word-break:break-word;}'
