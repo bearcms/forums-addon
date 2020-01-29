@@ -351,6 +351,24 @@ $app->bearCMS->addons
                 return $temp;
             });
 
+            $forumPostsListCache = null;
+            $getForumPostsList = function () use (&$forumPostsListCache) {
+                if ($forumPostsListCache === null) {
+                    $forumPosts = new Internal\Data\Models\ForumPosts();
+                    $forumPostsListCache = $forumPosts->getList();
+                }
+                return clone ($forumPostsListCache);
+            };
+
+            $forumPostsRepliesListCache = null;
+            $getForumPostsRepliesList = function () use (&$forumPostsRepliesListCache) {
+                if ($forumPostsRepliesListCache === null) {
+                    $forumPostsReplies = new Internal\Data\Models\ForumPostsReplies();
+                    $forumPostsRepliesListCache = $forumPostsReplies->getList();
+                }
+                return clone ($forumPostsRepliesListCache);
+            };
+
             Internal\ServerCommands::add('forumPostGet', function (array $data) {
                 $forumPosts = new Internal\Data\Models\ForumPosts();
                 $result = $forumPosts->get($data['forumPostID']);
@@ -359,30 +377,31 @@ $app->bearCMS->addons
                 return $result->toArray();
             });
 
-            Internal\ServerCommands::add('forumPostReplyDelete', function (array $data) {
+            Internal\ServerCommands::add('forumPostReplyDelete', function (array $data) use (&$forumPostsRepliesListCache) {
                 Internal\Data\Utilities\ForumPostsReplies::deleteReplyForever($data['forumPostID'], $data['replyID']);
+                $forumPostsRepliesListCache = null;
             });
 
-            Internal\ServerCommands::add('forumPostReplySetStatus', function (array $data) {
+            Internal\ServerCommands::add('forumPostReplySetStatus', function (array $data) use (&$forumPostsRepliesListCache) {
                 Internal\Data\Utilities\ForumPostsReplies::setStatus($data['forumPostID'], $data['replyID'], $data['status']);
+                $forumPostsRepliesListCache = null;
             });
 
-            Internal\ServerCommands::add('forumPostSetStatus', function (array $data) {
+            Internal\ServerCommands::add('forumPostSetStatus', function (array $data) use (&$forumPostsListCache) {
                 Internal\Data\Utilities\ForumPosts::setStatus($data['forumPostID'], $data['status']);
+                $forumPostsListCache = null;
             });
 
-            Internal\ServerCommands::add('forumPostsCount', function (array $data) {
-                $forumPosts = new Internal\Data\Models\ForumPosts();
-                $result = $forumPosts->getList();
+            Internal\ServerCommands::add('forumPostsCount', function (array $data) use ($getForumPostsList) {
+                $result = $getForumPostsList();
                 if ($data['type'] !== 'all') {
                     $result->filterBy('status', $data['type']);
                 }
                 return $result->count();
             });
 
-            Internal\ServerCommands::add('forumPostsList', function (array $data) {
-                $forumPosts = new Internal\Data\Models\ForumPosts();
-                $result = $forumPosts->getList();
+            Internal\ServerCommands::add('forumPostsList', function (array $data) use ($getForumPostsList) {
+                $result = $getForumPostsList();
                 $result->sortBy('createdTime', 'desc');
                 if ($data['type'] !== 'all') {
                     $result->filterBy('status', $data['type']);
@@ -395,9 +414,8 @@ $app->bearCMS->addons
                 return $result->toArray();
             });
 
-            Internal\ServerCommands::add('forumPostsRepliesCount', function (array $data) {
-                $forumPostsReplies = new Internal\Data\Models\ForumPostsReplies();
-                $result = $forumPostsReplies->getList();
+            Internal\ServerCommands::add('forumPostsRepliesCount', function (array $data) use ($getForumPostsRepliesList) {
+                $result = $getForumPostsRepliesList();
                 if (isset($data['forumPostID']) && strlen($data['forumPostID']) > 0) {
                     $result->filterBy('forumPostID', $data['forumPostID']);
                 }
@@ -407,9 +425,8 @@ $app->bearCMS->addons
                 return $result->count();
             });
 
-            Internal\ServerCommands::add('forumPostsRepliesList', function (array $data) {
-                $forumPostsReplies = new Internal\Data\Models\ForumPostsReplies();
-                $result = $forumPostsReplies->getList();
+            Internal\ServerCommands::add('forumPostsRepliesList', function (array $data) use ($getForumPostsRepliesList) {
+                $result = $getForumPostsRepliesList();
                 $result->sortBy('createdTime', 'desc');
                 if (isset($data['forumPostID']) && strlen($data['forumPostID']) > 0) {
                     $result->filterBy('forumPostID', $data['forumPostID']);
