@@ -17,7 +17,7 @@ $app->bearCMS->addons
         $addon->initialize = function (array $options) use ($app) {
             $forumPagesPathPrefix = isset($options['forumPagesPathPrefix']) ? $options['forumPagesPathPrefix'] : '/f/';
 
-            $context = $app->contexts->get(__FILE__);
+            $context = $app->contexts->get(__DIR__);
             $context->assets->addDir('assets');
 
             $app->localization
