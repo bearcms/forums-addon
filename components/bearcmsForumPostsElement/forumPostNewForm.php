@@ -56,8 +56,8 @@ $form->onSubmit = function($values) use ($component, $app) {
 ?><html>
     <head>
         <style>
-            .bearcms-forums-new-post-form [data-form-element="textbox"]>[data-form-element-component="input"],
-            .bearcms-forums-new-post-form [data-form-element="textarea"]>[data-form-element-component="textarea"]{
+            .bearcms-forums-new-post-form [data-form-element-type="textbox"] [data-form-element-component="input"],
+            .bearcms-forums-new-post-form [data-form-element-type="textarea"] [data-form-element-component="textarea"]{
                 width:calc(100vw - 50px);
                 max-width: 600px;
                 font-size:15px;
@@ -71,10 +71,10 @@ $form->onSubmit = function($values) use ($component, $app) {
                 margin-bottom: 21px;
                 border:0;
             }
-            .bearcms-forums-new-post-form [data-form-element="textarea"]>[data-form-element-component="textarea"]{
+            .bearcms-forums-new-post-form [data-form-element-type="textarea"] [data-form-element-component="textarea"]{
                 height:100px;
             }
-            .bearcms-forums-new-post-form [data-form-element]>[data-form-element-component="label"]{
+            .bearcms-forums-new-post-form [data-form-element-type] [data-form-element-component="label"]{
                 font-family:Arial,Helvetica,sans-serif;
                 font-size:15px;
                 color:#fff;
@@ -82,7 +82,7 @@ $form->onSubmit = function($values) use ($component, $app) {
                 cursor: default;
                 display:block;
             }
-            .bearcms-forums-new-post-form [data-form-element="submit-button"]>[data-form-element-component="button"]{
+            .bearcms-forums-new-post-form [data-form-element-type="submit-button"] [data-form-element-component="button"]{
                 box-sizing: border-box;
                 width:calc(100vw - 50px);
                 max-width: 600px;
@@ -96,13 +96,13 @@ $form->onSubmit = function($values) use ($component, $app) {
                 display:block;
                 text-align:center;
             }
-            .bearcms-forums-new-post-form [data-form-element="submit-button"]>[data-form-element-component="button"][disabled]{
+            .bearcms-forums-new-post-form [data-form-element-type="submit-button"] [data-form-element-component="button"][disabled]{
                 background-color:#ddd;
             }
-            .bearcms-forums-new-post-form [data-form-element="submit-button"]>[data-form-element-component="button"]:not([disabled]):hover{
+            .bearcms-forums-new-post-form [data-form-element-type="submit-button"] [data-form-element-component="button"]:not([disabled]):hover{
                 background-color:#f5f5f5;
             }
-            .bearcms-forums-new-post-form [data-form-element="submit-button"]>[data-form-element-component="button"]:not([disabled]):active{
+            .bearcms-forums-new-post-form [data-form-element-type="submit-button"] [data-form-element-component="button"]:not([disabled]):active{
                 background-color:#eeeeee;
             }
         </style>
