@@ -63,7 +63,7 @@ bearCMS.forumPostReply = bearCMS.forumPostReply || (function () {
     };
 
     var openLogin = function (event) {
-        var formID = event.target.parentNode.parentNode.id;
+        var formID = event.target.closest('form').id;
         clientPackages.get('users').then(function (users) {
             prepareForUserAction(formID);
             users.openLogin();
