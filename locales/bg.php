@@ -48,7 +48,7 @@ return [
     'bearcms.themes.options.forumPostPage.Author name' => 'Име на автора',
     'bearcms.themes.options.forumPostPage.Author image' => 'Снимка на автора',
     'bearcms.themes.options.forumPostPage.Date' => 'Дата',
-    'bearcms.themes.options.forumPostPage.Text' => 'Тест',
+    'bearcms.themes.options.forumPostPage.Text' => 'Текст',
     'bearcms.themes.options.forumPostPage.Text links' => 'Връзки в текста',
     'bearcms.themes.options.forumPostPage.Text input' => 'Поле за отговор',
     'bearcms.themes.options.forumPostPage.Send button' => 'Бутон за изпращане',
