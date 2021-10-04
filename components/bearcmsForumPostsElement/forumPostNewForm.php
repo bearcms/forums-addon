@@ -112,7 +112,7 @@ $form->onSubmit = function($values) use ($component, $app) {
         echo '<form class="bearcms-forums-new-post-form" onsubmitsuccess="' . htmlentities($onSubmitSuccess) . '">';
         echo '<form-element-textbox name="fptitle" label="' . htmlentities(__('bearcms.forumPosts.Title')) . '" />';
         echo '<form-element-textarea name="fptext" label="' . htmlentities(__('bearcms.forumPosts.Content')) . '" />';
-        echo '<form-element-submit-button text="' . htmlentities(__('bearcms.forumPosts.Post')) . '"  waitingText="' . htmlentities(__('bearcms.forumPosts.Posting ...')) . '" />';
+        echo '<form-element-submit-button text="' . htmlentities(__('bearcms.forumPosts.Post')) . '" waitingText="' . htmlentities(__('bearcms.forumPosts.Posting ...')) . '" />';
         echo '</form>';
         ?></body>
 </html>
