@@ -92,7 +92,7 @@ $app->bearCMS->addons
 
                             $content = '<html>';
                             $content .= '<head>';
-                            $content .= '<title>' . htmlspecialchars($forumPost->title) . '</title>';
+                            $content .= '<title>' . htmlspecialchars(\BearCMS\Internal\Data\Settings::applyPageTitleFormat($forumPost->title)) . '</title>';
                             $descriptionContent = $forumPost->text;
                             $content .= '<meta name="description" content="' . htmlentities($substr($descriptionContent, 0, 200) . ($strlen($descriptionContent) > 200 ? ' ...' : '')) . '">';
                             $content .= '<style>'
