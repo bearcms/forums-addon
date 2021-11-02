@@ -56,9 +56,9 @@ $app->bearCMS->addons
             ]);
 
             $app->routes
-                ->add($forumPagesPathPrefix . '?/', [
+                ->add([$forumPagesPathPrefix . '?', $forumPagesPathPrefix . '?/'], [
                     [$app->bearCMS, 'disabledCheck'],
-                    function () use ($app, $context, $forumPagesPathPrefix) {
+                    function (App\Request $request) use ($app, $context, $forumPagesPathPrefix) {
                         $forumPostSlug = $app->request->path->getSegment(1);
                         $forumPostID = Internal\Utilities::getIDFromSlug($forumPostSlug);
                         $forumPosts = new Internal\Data\Models\ForumPosts();
@@ -80,6 +80,12 @@ $app->bearCMS->addons
                             }
                             if (!$render) {
                                 return;
+                            }
+
+                            $path = $request->path->get();
+                            $hasSlash = substr($path, -1) === '/';
+                            if (!$hasSlash) {
+                                return new App\Response\PermanentRedirect($request->getURL() . '/');
                             }
 
                             $strlen = function (string $string) {
