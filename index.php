@@ -491,10 +491,6 @@ $app->bearCMS->addons
                     //$js = file_get_contents(__DIR__ . '/dev/forumPostReply.js');
                     $js = include __DIR__ . '/assets/forumPostReply.min.js.php';
                     $package->addJSCode($js);
-                })
-                ->add('-bearcms-forums-html5domdocument', function ($package) use ($context) {
-                    $package->addJSFile($context->assets->getURL('assets/public/HTML5DOMDocument.min.js', ['cacheMaxAge' => 999999999, 'version' => 1]));
-                    $package->get = 'return html5DOMDocument;';
                 });
         };
     });

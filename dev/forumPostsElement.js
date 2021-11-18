@@ -11,7 +11,7 @@ var bearCMS = bearCMS || {};
 bearCMS.forumPostsElement = bearCMS.forumPostsElement || (function () {
 
     var updateList = function (content, listElement) {
-        clientPackages.get('-bearcms-forums-html5domdocument').then(function (html5DOMDocument) {
+        clientPackages.get('html5DOMDocument').then(function (html5DOMDocument) {
             html5DOMDocument.insert(content, [listElement, 'outerHTML']);
         });
     };

@@ -71,7 +71,7 @@ bearCMS.forumPostReply = bearCMS.forumPostReply || (function () {
     };
 
     var updateList = function (result) {
-        clientPackages.get('-bearcms-forums-html5domdocument').then(function (html5DOMDocument) {
+        clientPackages.get('html5DOMDocument').then(function (html5DOMDocument) {
             var listElement = document.getElementById(result.listElementID);
             html5DOMDocument.insert(result.listContent, [listElement, 'outerHTML']);
         });
