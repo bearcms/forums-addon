@@ -28,6 +28,9 @@
         "ivopetkov/js-lightbox-bearframework-addon": "1.*",
         "ivopetkov/html5-dom-document-js-bearframework-addon": "1.*"
     },
+    "require-dev": {
+        "bearcms/addon-tests": "1.*"
+    },
     "autoload": {
         "files": [
             "autoload.php"
