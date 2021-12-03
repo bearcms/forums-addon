@@ -12,11 +12,11 @@ use BearFramework\App;
 $app = App::get();
 $context = $app->contexts->get(__DIR__);
 
-$count = strlen($component->count) > 0 ? (int) $component->count : 5;
+$count = strlen((string)$component->count) > 0 ? (int) $component->count : 5;
 if ($count < 1) {
     $count = 1;
 }
-$showRepliesCount = strlen($component->showRepliesCount) > 0 ? (int) $component->showRepliesCount > 0 : true;
+$showRepliesCount = strlen((string)$component->showRepliesCount) > 0 ? (int) $component->showRepliesCount > 0 : true;
 $categoryID = $component->categoryID;
 
 $forumPosts = new \BearCMS\Internal\Data\Models\ForumPosts();
@@ -55,7 +55,7 @@ foreach ($posts as $post) {
     }
 }
 if ($count < $posts->count()) {
-    $component = '<component src="file:' . $context->dir . '/components/bearcmsForumPostsElement/forumPostsList.php" count="' . htmlentities($count + 10) . '" categoryID="' . htmlentities($categoryID) . '" />';
+    $component = '<component src="file:' . $context->dir . '/components/bearcmsForumPostsElement/forumPostsList.php" count="' . htmlentities($count + 10) . '" categoryID="' . htmlentities((string)$categoryID) . '" />';
     $loadMoreData = [
         'serverData' => \BearCMS\Internal\TempClientData::set(['componentHTML' => $component])
     ];

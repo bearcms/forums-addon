@@ -11,15 +11,15 @@ use BearFramework\App;
 $app = App::get();
 $context = $app->contexts->get(__DIR__);
 
-$count = strlen($component->count) > 0 ? (int) $component->count : 5;
+$count = strlen((string)$component->count) > 0 ? (int) $component->count : 5;
 if ($count < 1) {
     $count = 1;
 }
-$showRepliesCount = strlen($component->showRepliesCount) > 0 ? (int) $component->showRepliesCount > 0 : true;
+$showRepliesCount = strlen((string)$component->showRepliesCount) > 0 ? (int) $component->showRepliesCount > 0 : true;
 $categoryID = $component->categoryID;
 
 $content = '<div class="bearcms-forum-posts-element">';
-$content .= '<component src="file:' . $context->dir . '/components/bearcmsForumPostsElement/forumPostsList.php" count="' . htmlentities($count) . '" categoryID="' . htmlentities($categoryID) . '" showRepliesCount="' . (int) $showRepliesCount . '"/>';
+$content .= '<component src="file:' . $context->dir . '/components/bearcmsForumPostsElement/forumPostsList.php" count="' . htmlentities($count) . '" categoryID="' . htmlentities((string)$categoryID) . '" showRepliesCount="' . (int) $showRepliesCount . '"/>';
 
 $content .= '<div class="bearcms-forum-posts-new-post-button-container">';
 $newPostData = [
