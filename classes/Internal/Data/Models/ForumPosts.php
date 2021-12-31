@@ -15,7 +15,12 @@ namespace BearCMS\Internal\Data\Models;
 class ForumPosts
 {
 
-    private function makeForumPostFromRawData($rawData): \BearCMS\Internal\Data\Models\ForumPost
+    /**
+     * 
+     * @param string $rawData
+     * @return \BearCMS\Internal\Data\Models\ForumPost
+     */
+    private function makeForumPostFromRawData(string $rawData): \BearCMS\Internal\Data\Models\ForumPost
     {
         $rawData = json_decode($rawData, true);
         $user = new \BearCMS\Internal\Data\Models\ForumPost();
@@ -66,10 +71,9 @@ class ForumPosts
     public function getList()
     {
         $list = \BearCMS\Internal\Data::getList('bearcms/forums/posts/post/');
-        array_walk($list, function(&$value) {
+        array_walk($list, function (&$value) {
             $value = $this->makeForumPostFromRawData($value);
         });
         return new \IvoPetkov\DataList($list);
     }
-
 }

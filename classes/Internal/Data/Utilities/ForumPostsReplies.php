@@ -59,6 +59,7 @@ class ForumPostsReplies
 
         $eventDetails = new \BearCMS\Internal\AddForumPostReplyEventDetails($forumPostID, $forumPostReplyID);
         $app->bearCMS->dispatchEvent('internalAddForumPostReply', $eventDetails);
+        ForumPosts::updateSitemap($forumPostID);
     }
 
     /**
@@ -93,6 +94,7 @@ class ForumPostsReplies
         if ($hasChange) {
             $forumPostData['lastChangeTime'] = time();
             $app->data->set($app->data->make($dataKey, json_encode($forumPostData)));
+            ForumPosts::updateSitemap($forumPostID);
         }
     }
 
@@ -124,6 +126,7 @@ class ForumPostsReplies
             $forumPostData['lastChangeTime'] = time();
             $forumPostData['replies'] = array_values($forumPostData['replies']);
             $app->data->set($app->data->make($dataKey, json_encode($forumPostData)));
+            ForumPosts::updateSitemap($forumPostID);
         }
     }
 }

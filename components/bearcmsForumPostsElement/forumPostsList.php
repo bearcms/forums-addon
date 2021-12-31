@@ -41,14 +41,14 @@ $posts = $forumPosts->getList()
 $counter = 0;
 echo '<div>';
 foreach ($posts as $post) {
-    $postUrl = $app->urls->get(BearCMS\Internal\ForumsData::$forumPagesPathPrefix . \BearCMS\Internal\Utilities::getSlug($post->id, $post->title) . '/');
+    $postURL = $post->getURL();
     $repliesCount = $post->replies->count();
     echo '<div' . ($isFullHtmlOutputType ? ' class="bearcms-forum-posts-post"' : '') . '>';
     $statusText = '';
     if ($post->status === 'pendingApproval') {
         $statusText = ' (' . __('bearcms.forumPosts.pending approval') . ')';
     }
-    echo '<a' . ($isFullHtmlOutputType ? ' class="bearcms-forum-posts-post-title"' : '') . ' href="' . htmlentities($postUrl) . '">' . htmlspecialchars($post->title) . $statusText . '</a>';
+    echo '<a' . ($isFullHtmlOutputType ? ' class="bearcms-forum-posts-post-title"' : '') . ' href="' . htmlentities($postURL) . '">' . htmlspecialchars($post->title) . $statusText . '</a>';
     if ($showRepliesCount) {
         echo '<div' . ($isFullHtmlOutputType ? ' class="bearcms-forum-posts-post-replies-count"' : '') . '>' . ($repliesCount === 1 ? __('bearcms.forumPosts.1 reply') : sprintf(__('bearcms.forumPosts.%s replies'), $repliesCount)) . '</div>';
     }

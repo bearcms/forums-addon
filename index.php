@@ -127,27 +127,29 @@ $app->bearCMS->addons
                         }
                     }
                 ]);
-            if (class_exists('\BearCMS\Internal\Sitemap')) {
-                Internal\Sitemap::register(function (Internal\Sitemap\Sitemap $sitemap) use ($app) {
-                    $forumPosts = new Internal\Data\Models\ForumPosts();
-                    $posts = $forumPosts->getList()
-                        ->filter(function ($forumPost) {
-                            if ($forumPost->status === 'approved') {
-                                return true;
-                            }
-                            return false;
-                        });
-                    foreach ($posts as $post) {
-                        $forumPostID = $post->id;
-                        $url = $app->urls->get(Internal\ForumsData::$forumPagesPathPrefix . Internal\Utilities::getSlug($forumPostID, $post->title) . '/');
-                        $sitemap->addURL($url, function () use ($forumPostID, $url) {
-                            $details = Internal\Data\Utilities\ForumPosts::getLastModifiedDetails($forumPostID);
-                            Internal\Sitemap::addLastModifiedDetails($url, $details);
-                            return Internal\Sitemap::getDateFromLastModifiedDetails($details);
-                        });
-                    }
-                });
-            }
+
+            Internal\Sitemap::addSource(function (Internal\Sitemap\Sitemap $sitemap) use ($app) {
+                $forumPosts = new Internal\Data\Models\ForumPosts();
+                $posts = $forumPosts->getList()
+                    ->filter(function ($forumPost) {
+                        if ($forumPost->status === 'approved') {
+                            return true;
+                        }
+                        return false;
+                    });
+                foreach ($posts as $post) {
+                    $forumPostID = $post->id;
+                    $path = $post->getURLPath();
+                    $sitemap->addItem($path, function () use ($forumPostID) {
+                        $forumPosts = new Internal\Data\Models\ForumPosts();
+                        $forumPost = $forumPosts->get($forumPostID);
+                        if ($forumPost !== null) {
+                            return strlen((string)$forumPost->lastChangeTime) > 0 ? (int)$forumPost->lastChangeTime : null;
+                        }
+                        return null;
+                    });
+                }
+            });
 
             $app->serverRequests
                 ->add('-bearcms-forumposts-load-more', function ($data) use ($app) {

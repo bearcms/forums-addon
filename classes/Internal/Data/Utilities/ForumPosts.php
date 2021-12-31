@@ -54,6 +54,7 @@ class ForumPosts
             }
         }
 
+        self::updateSitemap($id);
         return $id;
     }
 
@@ -76,23 +77,31 @@ class ForumPosts
         }
         if ($hasChange) {
             $app->data->set($app->data->make($dataKey, json_encode($forumPostData)));
+            self::updateSitemap($forumPostID);
         }
     }
 
-    static function getDataKey(string $id)
+    /**
+     * 
+     * @param string $id
+     * @return string
+     */
+    static function getDataKey(string $id): string
     {
         return 'bearcms/forums/posts/post/' . md5($id) . '.json';
     }
 
-    static function getLastModifiedDetails(string $forumPostID)
+    /**
+     * 
+     * @param string $forumPostID
+     * @return void
+     */
+    static function updateSitemap(string $forumPostID): void
     {
-        $details = ['dates' => [], 'dataKeys' => []];
-        $details['dataKeys'][] = self::getDataKey($forumPostID);
         $forumPosts = new \BearCMS\Internal\Data\Models\ForumPosts();
         $forumPost = $forumPosts->get($forumPostID);
         if ($forumPost !== null) {
-            $details['dates'][] = $forumPost->lastChangeTime;
+            \BearCMS\Internal\Sitemap::addUpdateDateTask($forumPost->getURLPath());
         }
-        return $details;
     }
 }
