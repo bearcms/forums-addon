@@ -12,7 +12,7 @@ namespace BearCMS\Internal;
 /**
  * @internal
  */
-class Utilities
+class ForumsUtilities
 {
 
     /**

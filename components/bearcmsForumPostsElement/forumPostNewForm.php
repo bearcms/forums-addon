@@ -47,7 +47,7 @@ $form->onSubmit = function($values) use ($component, $app) {
     }
     $forumPostID = \BearCMS\Internal\Data\Utilities\ForumPosts::add($categoryID, $author, $title, $text, $status);
 
-    $slug = \BearCMS\Internal\Utilities::getSlug($forumPostID, $title);
+    $slug = \BearCMS\Internal\ForumsUtilities::getSlug($forumPostID, $title);
     return [
         'success' => 1,
         'redirectUrl' => $app->urls->get(BearCMS\Internal\ForumsData::$forumPagesPathPrefix . $slug . '/')

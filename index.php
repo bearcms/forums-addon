@@ -60,11 +60,11 @@ $app->bearCMS->addons
                     [$app->bearCMS, 'disabledCheck'],
                     function (App\Request $request) use ($app, $context, $forumPagesPathPrefix) {
                         $forumPostSlug = $app->request->path->getSegment(1);
-                        $forumPostID = Internal\Utilities::getIDFromSlug($forumPostSlug);
+                        $forumPostID = Internal\ForumsUtilities::getIDFromSlug($forumPostSlug);
                         $forumPosts = new Internal\Data\Models\ForumPosts();
                         $forumPost = $forumPosts->get($forumPostID);
                         if ($forumPost !== null) {
-                            $realSlug = Internal\Utilities::getSlug($forumPost->id, $forumPost->title);
+                            $realSlug = Internal\ForumsUtilities::getSlug($forumPost->id, $forumPost->title);
                             if ($realSlug !== $forumPostSlug) {
                                 $newUrl = $app->urls->get($forumPagesPathPrefix . $realSlug . '/');
                                 $response = new App\Response\PermanentRedirect($newUrl);
