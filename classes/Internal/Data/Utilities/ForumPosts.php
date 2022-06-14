@@ -17,6 +17,8 @@ use BearFramework\App;
 class ForumPosts
 {
 
+    static private $forumPostsListCache = null;
+
     /**
      * 
      * @param string $categoryID
@@ -54,6 +56,7 @@ class ForumPosts
             }
         }
 
+        self::$forumPostsListCache = null;
         self::updateSitemap($id);
         return $id;
     }
@@ -76,6 +79,7 @@ class ForumPosts
             $hasChange = true;
         }
         if ($hasChange) {
+            self::$forumPostsListCache = null;
             $app->data->set($app->data->make($dataKey, json_encode($forumPostData)));
             self::updateSitemap($forumPostID);
         }
@@ -103,5 +107,18 @@ class ForumPosts
         if ($forumPost !== null) {
             \BearCMS\Internal\Sitemap::addUpdateDateTask($forumPost->getURLPath());
         }
+    }
+
+    /**
+     * 
+     * @return \IvoPetkov\DataList
+     */
+    static function getList(): \IvoPetkov\DataList
+    {
+        if (self::$forumPostsListCache === null) {
+            $forumPosts = new \BearCMS\Internal\Data\Models\ForumPosts();
+            self::$forumPostsListCache = $forumPosts->getList();
+        }
+        return clone (self::$forumPostsListCache);
     }
 }

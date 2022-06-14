@@ -9,6 +9,8 @@
 
 namespace BearCMS\Internal\Data\Models;
 
+use BearCMS\Internal\Data\Utilities\ForumPostsReplies as UtilitiesForumPostsReplies;
+
 /**
  * @internal
  */
@@ -23,28 +25,18 @@ class ForumPosts
     private function makeForumPostFromRawData(string $rawData): \BearCMS\Internal\Data\Models\ForumPost
     {
         $rawData = json_decode($rawData, true);
-        $user = new \BearCMS\Internal\Data\Models\ForumPost();
+        $forumPost = new \BearCMS\Internal\Data\Models\ForumPost();
         $properties = ['id', 'status', 'author', 'title', 'text', 'categoryID', 'createdTime', 'replies', 'lastChangeTime'];
         foreach ($properties as $property) {
             if ($property === 'replies') {
-                $temp = new \IvoPetkov\DataList();
                 if (isset($rawData['replies'])) {
-                    foreach ($rawData['replies'] as $replyData) {
-                        $reply = new \BearCMS\Internal\Data\Models\ForumPostReply();
-                        $reply->id = $replyData['id'];
-                        $reply->status = $replyData['status'];
-                        $reply->author = $replyData['author'];
-                        $reply->text = $replyData['text'];
-                        $reply->createdTime = $replyData['createdTime'];
-                        $temp[] = $reply;
-                    }
+                    $forumPost->replies = UtilitiesForumPostsReplies::createRepliesCollection($rawData['replies'], $rawData['id']);
                 }
-                $user->replies = $temp;
             } elseif (array_key_exists($property, $rawData)) {
-                $user->$property = $rawData[$property];
+                $forumPost->$property = $rawData[$property];
             }
         }
-        return $user;
+        return $forumPost;
     }
 
     /**

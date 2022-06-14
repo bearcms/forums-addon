@@ -33,36 +33,37 @@ class ForumPost
 
     function __construct()
     {
-        $this->defineProperty('id', [
-            'type' => 'string'
-        ]);
-        $this->defineProperty('status', [
-            'type' => 'string'
-        ]);
-        $this->defineProperty('author', [
-            'type' => 'array'
-        ]);
-        $this->defineProperty('title', [
-            'type' => '?string'
-        ]);
-        $this->defineProperty('text', [
-            'type' => '?string'
-        ]);
-        $this->defineProperty('categoryID', [
-            'type' => 'string'
-        ]);
-        $this->defineProperty('createdTime', [
-            'type' => '?int'
-        ]);
-        $this->defineProperty('replies', [
-            'type' => '\IvoPetkov\DataList',
-            'init' => function () {
-                return new \IvoPetkov\DataList();
-            }
-        ]);
-        $this->defineProperty('lastChangeTime', [
-            'type' => '?int'
-        ]);
+        $this
+            ->defineProperty('id', [
+                'type' => 'string'
+            ])
+            ->defineProperty('status', [
+                'type' => 'string'
+            ])
+            ->defineProperty('author', [
+                'type' => 'array'
+            ])
+            ->defineProperty('title', [
+                'type' => '?string'
+            ])
+            ->defineProperty('text', [
+                'type' => '?string'
+            ])
+            ->defineProperty('categoryID', [
+                'type' => 'string'
+            ])
+            ->defineProperty('createdTime', [
+                'type' => '?int'
+            ])
+            ->defineProperty('replies', [
+                'type' => '\IvoPetkov\DataList',
+                'init' => function () {
+                    return new \IvoPetkov\DataList();
+                }
+            ])
+            ->defineProperty('lastChangeTime', [
+                'type' => '?int'
+            ]);
     }
 
     /**

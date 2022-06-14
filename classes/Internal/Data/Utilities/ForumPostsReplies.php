@@ -17,6 +17,8 @@ use BearFramework\App;
 class ForumPostsReplies
 {
 
+    static private $forumPostsRepliesListCache = null;
+
     /**
      * 
      * @param string $forumPostID
@@ -57,6 +59,8 @@ class ForumPostsReplies
             }
         }
 
+        self::$forumPostsRepliesListCache = null;
+
         $eventDetails = new \BearCMS\Internal\AddForumPostReplyEventDetails($forumPostID, $forumPostReplyID);
         $app->bearCMS->dispatchEvent('internalAddForumPostReply', $eventDetails);
         ForumPosts::updateSitemap($forumPostID);
@@ -94,6 +98,7 @@ class ForumPostsReplies
         if ($hasChange) {
             $forumPostData['lastChangeTime'] = time();
             $app->data->set($app->data->make($dataKey, json_encode($forumPostData)));
+            self::$forumPostsRepliesListCache = null;
             ForumPosts::updateSitemap($forumPostID);
         }
     }
@@ -126,7 +131,43 @@ class ForumPostsReplies
             $forumPostData['lastChangeTime'] = time();
             $forumPostData['replies'] = array_values($forumPostData['replies']);
             $app->data->set($app->data->make($dataKey, json_encode($forumPostData)));
+            self::$forumPostsRepliesListCache = null;
             ForumPosts::updateSitemap($forumPostID);
         }
+    }
+
+    /**
+     * 
+     * @param array $rawReplies
+     * @param string $forumPostID
+     * @return \IvoPetkov\DataList
+     */
+    static function createRepliesCollection(array $rawReplies, string $forumPostID): \IvoPetkov\DataList
+    {
+        $dataList = new \IvoPetkov\DataList();
+        foreach ($rawReplies as $replyData) {
+            $reply = new \BearCMS\Internal\Data\Models\ForumPostReply();
+            $reply->id = $replyData['id'];
+            $reply->status = $replyData['status'];
+            $reply->author = $replyData['author'];
+            $reply->text = $replyData['text'];
+            $reply->createdTime = $replyData['createdTime'];
+            $reply->forumPostID = $forumPostID;
+            $dataList[] = $reply;
+        }
+        return $dataList;
+    }
+
+    /**
+     * 
+     * @return \IvoPetkov\DataList
+     */
+    static function getList(): \IvoPetkov\DataList
+    {
+        if (self::$forumPostsRepliesListCache === null) {
+            $forumPostsReplies = new \BearCMS\Internal\Data\Models\ForumPostsReplies();
+            self::$forumPostsRepliesListCache = $forumPostsReplies->getList();
+        }
+        return clone (self::$forumPostsRepliesListCache);
     }
 }

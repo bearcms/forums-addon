@@ -347,6 +347,96 @@ $app->bearCMS->addons
                 ]);
             };
 
+            // Posts
+
+            Internal\ServerCommands::add('forumPostsList', function (array $data) {
+                $result = \BearCMS\Internal\Data\Utilities\ForumPosts::getList();
+                $result->sortBy('createdTime', 'desc');
+                if ($data['type'] !== 'all') {
+                    $result->filterBy('status', $data['type']);
+                }
+                $result = $result->slice($data['limit'] * ($data['page'] - 1), $data['limit']);
+                foreach ($result as $i => $item) {
+                    $result[$i]->location = '';
+                    $result[$i]->author = Internal\PublicProfile::getFromAuthor($item->author)->toArray();
+                }
+                return $result->toArray();
+            });
+
+            Internal\ServerCommands::add('forumPostsCount', function (array $data) {
+                $result = \BearCMS\Internal\Data\Utilities\ForumPosts::getList();
+                if ($data['type'] !== 'all') {
+                    $result->filterBy('status', $data['type']);
+                }
+                return $result->count();
+            });
+
+            Internal\ServerCommands::add('forumPostGet', function (array $data) {
+                $forumPosts = new Internal\Data\Models\ForumPosts();
+                $result = $forumPosts->get($data['forumPostID']);
+                if ($result !== null) {
+                    $result->author = Internal\PublicProfile::getFromAuthor($result->author)->toArray();
+                    $result->replies = new \IvoPetkov\DataList();
+                    return $result->toArray();
+                }
+            });
+
+            Internal\ServerCommands::add('forumPostSetStatus', function (array $data) {
+                Internal\Data\Utilities\ForumPosts::setStatus($data['forumPostID'], $data['status']);
+            });
+
+            // Replies
+
+            Internal\ServerCommands::add('forumPostsRepliesList', function (array $data) {
+                $result = \BearCMS\Internal\Data\Utilities\ForumPostsReplies::getList();
+                $result->sortBy('createdTime', 'desc');
+                if (isset($data['forumPostID']) && strlen($data['forumPostID']) > 0) {
+                    $result->filterBy('forumPostID', $data['forumPostID']);
+                }
+                if ($data['type'] !== 'all') {
+                    $result->filterBy('status', $data['type']);
+                }
+                $result = $result->slice($data['limit'] * ($data['page'] - 1), $data['limit']);
+                foreach ($result as $i => $item) {
+                    $result[$i]->location = '';
+                    $result[$i]->author = Internal\PublicProfile::getFromAuthor($item->author)->toArray();
+                }
+                return $result->toArray();
+            });
+
+            Internal\ServerCommands::add('forumPostsRepliesCount', function (array $data) {
+                $result = \BearCMS\Internal\Data\Utilities\ForumPostsReplies::getList();
+                if (isset($data['forumPostID']) && strlen($data['forumPostID']) > 0) {
+                    $result->filterBy('forumPostID', $data['forumPostID']);
+                }
+                if ($data['type'] !== 'all') {
+                    $result->filterBy('status', $data['type']);
+                }
+                return $result->count();
+            });
+
+            Internal\ServerCommands::add('forumPostsRepliesGet', function (array $data) {
+                $forumPostsReplies = new Internal\Data\Models\ForumPostsReplies();
+                $result = $forumPostsReplies->get($data['forumPostID'], $data['replyID']);
+                if ($result !== null) {
+                    $result->author = Internal\PublicProfile::getFromAuthor($result->author)->toArray();
+                    return $result->toArray();
+                }
+                return null;
+            });
+
+            Internal\ServerCommands::add('forumPostReplySetStatus', function (array $data) use (&$forumPostsRepliesListCache) {
+                Internal\Data\Utilities\ForumPostsReplies::setStatus($data['forumPostID'], $data['replyID'], $data['status']);
+                $forumPostsRepliesListCache = null;
+            });
+
+            Internal\ServerCommands::add('forumPostReplyDelete', function (array $data) use (&$forumPostsRepliesListCache) {
+                Internal\Data\Utilities\ForumPostsReplies::deleteReplyForever($data['forumPostID'], $data['replyID']);
+                $forumPostsRepliesListCache = null;
+            });
+
+            // Categories
+
             Internal\ServerCommands::add('forumCategories', function () {
                 $list = Internal\Data::getList('bearcms/forums/categories/category/');
                 $structure = Internal\Data::getValue('bearcms/forums/categories/structure.json');
@@ -357,97 +447,6 @@ $app->bearCMS->addons
                     $temp['categories'][] = json_decode($value, true);
                 }
                 return $temp;
-            });
-
-            $forumPostsListCache = null;
-            $getForumPostsList = function () use (&$forumPostsListCache) {
-                if ($forumPostsListCache === null) {
-                    $forumPosts = new Internal\Data\Models\ForumPosts();
-                    $forumPostsListCache = $forumPosts->getList();
-                }
-                return clone ($forumPostsListCache);
-            };
-
-            $forumPostsRepliesListCache = null;
-            $getForumPostsRepliesList = function () use (&$forumPostsRepliesListCache) {
-                if ($forumPostsRepliesListCache === null) {
-                    $forumPostsReplies = new Internal\Data\Models\ForumPostsReplies();
-                    $forumPostsRepliesListCache = $forumPostsReplies->getList();
-                }
-                return clone ($forumPostsRepliesListCache);
-            };
-
-            Internal\ServerCommands::add('forumPostGet', function (array $data) {
-                $forumPosts = new Internal\Data\Models\ForumPosts();
-                $result = $forumPosts->get($data['forumPostID']);
-                $result->author = Internal\PublicProfile::getFromAuthor($result->author)->toArray();
-                $result->replies = new \IvoPetkov\DataList();
-                return $result->toArray();
-            });
-
-            Internal\ServerCommands::add('forumPostReplyDelete', function (array $data) use (&$forumPostsRepliesListCache) {
-                Internal\Data\Utilities\ForumPostsReplies::deleteReplyForever($data['forumPostID'], $data['replyID']);
-                $forumPostsRepliesListCache = null;
-            });
-
-            Internal\ServerCommands::add('forumPostReplySetStatus', function (array $data) use (&$forumPostsRepliesListCache) {
-                Internal\Data\Utilities\ForumPostsReplies::setStatus($data['forumPostID'], $data['replyID'], $data['status']);
-                $forumPostsRepliesListCache = null;
-            });
-
-            Internal\ServerCommands::add('forumPostSetStatus', function (array $data) use (&$forumPostsListCache) {
-                Internal\Data\Utilities\ForumPosts::setStatus($data['forumPostID'], $data['status']);
-                $forumPostsListCache = null;
-            });
-
-            Internal\ServerCommands::add('forumPostsCount', function (array $data) use ($getForumPostsList) {
-                $result = $getForumPostsList();
-                if ($data['type'] !== 'all') {
-                    $result->filterBy('status', $data['type']);
-                }
-                return $result->count();
-            });
-
-            Internal\ServerCommands::add('forumPostsList', function (array $data) use ($getForumPostsList) {
-                $result = $getForumPostsList();
-                $result->sortBy('createdTime', 'desc');
-                if ($data['type'] !== 'all') {
-                    $result->filterBy('status', $data['type']);
-                }
-                $result = $result->slice($data['limit'] * ($data['page'] - 1), $data['limit']);
-                foreach ($result as $i => $item) {
-                    $result[$i]->location = '';
-                    $result[$i]->author = Internal\PublicProfile::getFromAuthor($item->author)->toArray();
-                }
-                return $result->toArray();
-            });
-
-            Internal\ServerCommands::add('forumPostsRepliesCount', function (array $data) use ($getForumPostsRepliesList) {
-                $result = $getForumPostsRepliesList();
-                if (isset($data['forumPostID']) && strlen($data['forumPostID']) > 0) {
-                    $result->filterBy('forumPostID', $data['forumPostID']);
-                }
-                if ($data['type'] !== 'all') {
-                    $result->filterBy('status', $data['type']);
-                }
-                return $result->count();
-            });
-
-            Internal\ServerCommands::add('forumPostsRepliesList', function (array $data) use ($getForumPostsRepliesList) {
-                $result = $getForumPostsRepliesList();
-                $result->sortBy('createdTime', 'desc');
-                if (isset($data['forumPostID']) && strlen($data['forumPostID']) > 0) {
-                    $result->filterBy('forumPostID', $data['forumPostID']);
-                }
-                if ($data['type'] !== 'all') {
-                    $result->filterBy('status', $data['type']);
-                }
-                $result = $result->slice($data['limit'] * ($data['page'] - 1), $data['limit']);
-                foreach ($result as $i => $item) {
-                    $result[$i]->location = '';
-                    $result[$i]->author = Internal\PublicProfile::getFromAuthor($item->author)->toArray();
-                }
-                return $result->toArray();
             });
 
             if (Internal\Config::hasFeature('NOTIFICATIONS')) {

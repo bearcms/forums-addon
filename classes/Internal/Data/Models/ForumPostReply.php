@@ -13,11 +13,8 @@ namespace BearCMS\Internal\Data\Models;
  * @property string $id
  * @property string $status
  * @property array $author
- * @property ?string $title
  * @property ?string $text
- * @property string $categoryID
  * @property ?int $createdTime
- * @property \IvoPetkov\DataList|\BearCMS\Internal\Data\Models\ForumPostReply[] $replies
  * @internal
  */
 class ForumPostReply
@@ -28,21 +25,21 @@ class ForumPostReply
 
     function __construct()
     {
-        $this->defineProperty('id', [
-            'type' => 'string'
-        ]);
-        $this->defineProperty('status', [
-            'type' => 'string'
-        ]);
-        $this->defineProperty('author', [
-            'type' => 'array'
-        ]);
-        $this->defineProperty('text', [
-            'type' => '?string'
-        ]);
-        $this->defineProperty('createdTime', [
-            'type' => '?int'
-        ]);
+        $this
+            ->defineProperty('id', [
+                'type' => 'string'
+            ])
+            ->defineProperty('status', [
+                'type' => 'string'
+            ])
+            ->defineProperty('author', [
+                'type' => 'array'
+            ])
+            ->defineProperty('text', [
+                'type' => '?string'
+            ])
+            ->defineProperty('createdTime', [
+                'type' => '?int'
+            ]);
     }
-
 }

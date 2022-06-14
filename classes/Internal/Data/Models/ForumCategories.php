@@ -55,7 +55,7 @@ class ForumCategories
     {
         if (!isset(self::$cache['list'])) {
             $list = \BearCMS\Internal\Data::getList('bearcms/forums/categories/category/');
-            array_walk($list, function(&$value) {
+            array_walk($list, function (&$value) {
                 $value = $this->makeForumCategoryFromRawData($value);
             });
 
@@ -66,7 +66,7 @@ class ForumCategories
                 $flattenStructureData[] = $itemData['id'];
             }
             $flattenStructureData = array_flip($flattenStructureData);
-            usort($list, function($object1, $object2) use ($flattenStructureData) {
+            usort($list, function ($object1, $object2) use ($flattenStructureData) {
                 return $flattenStructureData[$object1->id] - $flattenStructureData[$object2->id];
             });
             unset($flattenStructureData);
@@ -75,5 +75,4 @@ class ForumCategories
         }
         return new \IvoPetkov\DataList(self::$cache['list']);
     }
-
 }
