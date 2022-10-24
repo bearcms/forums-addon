@@ -96,7 +96,7 @@ $app->bearCMS->addons
                                 return function_exists('mb_substr') ? mb_substr($string, $start, $length) : substr($string, $start, $length);
                             };
 
-                            $content = '<html>';
+                            $content = '<html data-bearcms-page-type="forumPost">';
                             $content .= '<head>';
                             $content .= '<title>' . htmlspecialchars(\BearCMS\Internal\Data\Settings::applyPageTitleFormat($forumPost->title)) . '</title>';
                             $descriptionContent = $forumPost->text;
@@ -177,12 +177,13 @@ $app->bearCMS->addons
                     }
                 });
 
-            Internal\Themes::$elementsOptions['forumPosts'] = function ($context, $idPrefix, $parentSelector) {
-                $groupForumPosts = $context->addGroup(__("bearcms.themes.options.Forum posts"));
+            Internal\Themes::$elementsOptions['forumPosts'] = function ($options, $idPrefix, $parentSelector, $context, $details) {
+                $groupForumPosts = $options->addGroup(__("bearcms.themes.options.Forum posts"));
 
                 $groupForumPostsPost = $groupForumPosts->addGroup(__("bearcms.themes.options.forumPosts.Post"));
                 $groupForumPostsPost->addOption($idPrefix . "ForumPostsPostCSS", "css", '', [
                     "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", $parentSelector . " .bearcms-forum-posts-post", "box-sizing:border-box;"],
                         ["selector", $parentSelector . " .bearcms-forum-posts-post"]
@@ -192,6 +193,7 @@ $app->bearCMS->addons
                 $groupForumPostsPostTitle = $groupForumPostsPost->addGroup(__("bearcms.themes.options.forumPosts.Title"));
                 $groupForumPostsPostTitle->addOption($idPrefix . "ForumPostsTitleCSS", "css", '', [
                     "cssTypes" => ["cssText", "cssTextShadow"],
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", $parentSelector . " .bearcms-forum-posts-post-title", "text-decoration:none;"],
                         ["selector", $parentSelector . " .bearcms-forum-posts-post-title"]
@@ -201,6 +203,7 @@ $app->bearCMS->addons
                 $groupForumPostsPostRepliesCount = $groupForumPostsPost->addGroup(__("bearcms.themes.options.forumPosts.Replies count"));
                 $groupForumPostsPostRepliesCount->addOption($idPrefix . "ForumPostsRepliesCountCSS", "css", '', [
                     "cssTypes" => ["cssText", "cssTextShadow"],
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["selector", $parentSelector . " .bearcms-forum-posts-post-replies-count"]
                     ]
@@ -208,6 +211,7 @@ $app->bearCMS->addons
 
                 $groupForumPostsShowMoreButton = $groupForumPosts->addGroup(__("bearcms.themes.options.forumPosts.Show more button"));
                 $groupForumPostsShowMoreButton->addOption($idPrefix . "ForumPostsShowMoreButtonCSS", "css", '', [
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", $parentSelector . " .bearcms-forum-posts-show-more-button", "box-sizing:border-box;display:inline-block;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;"],
                         ["selector", $parentSelector . " .bearcms-forum-posts-show-more-button"]
@@ -217,6 +221,7 @@ $app->bearCMS->addons
                 $groupForumPostsShowMoreButtonContainer = $groupForumPostsShowMoreButton->addGroup(__("bearcms.themes.options.forumPosts.Container"));
                 $groupForumPostsShowMoreButtonContainer->addOption($idPrefix . "ForumPostsShowMoreButtonContainerCSS", "css", '', [
                     "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", $parentSelector . " .bearcms-forum-posts-show-more-button-container", "box-sizing:border-box;"],
                         ["selector", $parentSelector . " .bearcms-forum-posts-show-more-button-container"]
@@ -225,6 +230,7 @@ $app->bearCMS->addons
 
                 $groupForumPostsNewPostButton = $groupForumPosts->addGroup(__("bearcms.themes.options.forumPosts.New post button"));
                 $groupForumPostsNewPostButton->addOption($idPrefix . "ForumPostsNewPostButtonCSS", "css", '', [
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", $parentSelector . " .bearcms-forum-posts-new-post-button", "box-sizing:border-box;display:inline-block;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;"],
                         ["selector", $parentSelector . " .bearcms-forum-posts-new-post-button"]
@@ -234,6 +240,7 @@ $app->bearCMS->addons
                 $groupForumPostsNewPostButtonContainer = $groupForumPostsNewPostButton->addGroup(__("bearcms.themes.options.forumPosts.Container"));
                 $groupForumPostsNewPostButtonContainer->addOption($idPrefix . "ForumPostsShowMoreButtonContainerCSS", "css", '', [
                     "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", $parentSelector . " .bearcms-forum-posts-new-post-button-container", "box-sizing:border-box;"],
                         ["selector", $parentSelector . " .bearcms-forum-posts-new-post-button-container"]
@@ -241,12 +248,13 @@ $app->bearCMS->addons
                 ]);
             };
 
-            Internal\Themes::$pagesOptions['forums'] = function ($context) {
+            Internal\Themes::$pagesOptions['forums'] = function ($options, array $details = []) {
 
-                $groupForumPostPage = $context->addGroup(__("bearcms.themes.options.Forum post page"));
+                $groupForumPostPage = $options->addGroup(__("bearcms.themes.options.Forum post page"));
 
                 $groupForumPostPageTitle = $groupForumPostPage->addGroup(__("bearcms.themes.options.forumPostPage.Title"));
                 $groupForumPostPageTitle->addOption("forumPostPageTitleCSS", "css", '', [
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", ".bearcms-forum-post-page-title", "box-sizing:border-box;font-weight:normal;padding:0;margin:0;"],
                         ["selector", ".bearcms-forum-post-page-title"]
@@ -256,6 +264,7 @@ $app->bearCMS->addons
                 $groupForumPostPageTitleContainer = $groupForumPostPageTitle->addGroup(__("bearcms.themes.options.forumPostPage.Container"));
                 $groupForumPostPageTitleContainer->addOption("forumPostPageTitleContainerCSS", "css", '', [
                     "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", ".bearcms-forum-post-page-title-container", "box-sizing:border-box;"],
                         ["selector", ".bearcms-forum-post-page-title-container"]
@@ -265,6 +274,7 @@ $app->bearCMS->addons
                 $groupForumPostPageContent = $groupForumPostPage->addGroup(__("bearcms.themes.options.forumPostPage.Content"));
                 $groupForumPostPageContent->addOption("forumPostPageContentCSS", "css", '', [
                     "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", ".bearcms-forum-post-page-content", "box-sizing:border-box;"],
                         ["selector", ".bearcms-forum-post-page-content"]
@@ -274,6 +284,7 @@ $app->bearCMS->addons
                 $groupForumPostPageReply = $groupForumPostPageContent->addGroup(__("bearcms.themes.options.forumPostPage.Reply"));
                 $groupForumPostPageReply->addOption("forumPostPageReplyCSS", "css", '', [
                     "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", ".bearcms-forum-post-page-reply", "box-sizing:border-box;"],
                         ["selector", ".bearcms-forum-post-page-reply"]
@@ -283,6 +294,7 @@ $app->bearCMS->addons
                 $groupForumPostPageReplyAuthorName = $groupForumPostPageReply->addGroup(__("bearcms.themes.options.forumPostPage.Author name"));
                 $groupForumPostPageReplyAuthorName->addOption("forumPostPageReplyAuthorNameCSS", "css", '', [
                     "cssTypes" => ["cssText", "cssTextShadow"],
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["selector", ".bearcms-forum-post-page-reply-author-name"]
                     ]
@@ -291,6 +303,7 @@ $app->bearCMS->addons
                 $groupForumPostPageReplyAuthorImage = $groupForumPostPageReply->addGroup(__("bearcms.themes.options.forumPostPage.Author image"));
                 $groupForumPostPageReplyAuthorImage->addOption("forumPostPageReplyAuthorImageCSS", "css", '', [
                     "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", ".bearcms-forum-post-page-reply-author-image", "box-sizing:border-box;"],
                         ["selector", ".bearcms-forum-post-page-reply-author-image"]
@@ -300,6 +313,7 @@ $app->bearCMS->addons
                 $groupForumPostPageReplyDate = $groupForumPostPageReply->addGroup(__("bearcms.themes.options.forumPostPage.Date"));
                 $groupForumPostPageReplyDate->addOption("forumPostPageReplyDateCSS", "css", '', [
                     "cssTypes" => ["cssText", "cssTextShadow"],
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["selector", ".bearcms-forum-post-page-reply-date"]
                     ]
@@ -308,6 +322,7 @@ $app->bearCMS->addons
                 $groupForumPostPageReplyText = $groupForumPostPageReply->addGroup(__("bearcms.themes.options.forumPostPage.Text"));
                 $groupForumPostPageReplyText->addOption("forumPostPageReplyTextCSS", "css", '', [
                     "cssTypes" => ["cssText", "cssTextShadow"],
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["selector", ".bearcms-forum-post-page-reply-text"]
                     ]
@@ -316,6 +331,7 @@ $app->bearCMS->addons
                 $groupForumPostPageReplyTextLinks = $groupForumPostPageReply->addGroup(__("bearcms.themes.options.forumPostPage.Text links"));
                 $groupForumPostPageReplyTextLinks->addOption("forumPostPageReplyTextLinksCSS", "css", '', [
                     "cssTypes" => ["cssText", "cssTextShadow"],
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["selector", ".bearcms-forum-post-page-reply-text a"]
                     ]
@@ -324,6 +340,7 @@ $app->bearCMS->addons
                 $groupForumPostPageTextInput = $groupForumPostPageContent->addGroup(__("bearcms.themes.options.forumPostPage.Text input"));
                 $groupForumPostPageTextInput->addOption("forumPostPageTextInputCSS", "css", '', [
                     "cssTypes" => ["cssText", "cssTextShadow", "cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", ".bearcms-forum-post-page-text-input", "box-sizing:border-box;border:0;margin:0;padding:0;"],
                         ["selector", ".bearcms-forum-post-page-text-input"]
@@ -332,6 +349,7 @@ $app->bearCMS->addons
 
                 $groupForumPostPageSendButton = $groupForumPostPageContent->addGroup(__("bearcms.themes.options.forumPostPage.Send button"));
                 $groupForumPostPageSendButton->addOption("forumPostPageSendButtonCSS", "css", '', [
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", ".bearcms-forum-post-page-send-button", "box-sizing:border-box;display:inline-block;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;"],
                         ["selector", ".bearcms-forum-post-page-send-button"]
@@ -340,6 +358,7 @@ $app->bearCMS->addons
 
                 $groupForumPostPageSendButtonWaiting = $groupForumPostPageSendButton->addGroup(__("bearcms.themes.options.forumPostPage.Send button waiting"));
                 $groupForumPostPageSendButtonWaiting->addOption("forumPostPageSendButtonWaitingCSS", "css", '', [
+                    "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", ".bearcms-forum-post-page-send-button-waiting", "box-sizing:border-box;display:inline-block;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;"],
                         ["selector", ".bearcms-forum-post-page-send-button-waiting"]
