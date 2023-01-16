@@ -96,7 +96,7 @@ $app->bearCMS->addons
                                 return function_exists('mb_substr') ? mb_substr($string, $start, $length) : substr($string, $start, $length);
                             };
 
-                            $content = '<html data-bearcms-page-type="forumPost">';
+                            $content = '<html data-bearcms-page-type="forum-post">';
                             $content .= '<head>';
                             $content .= '<title>' . htmlspecialchars(\BearCMS\Internal\Data\Settings::applyPageTitleFormat($forumPost->title)) . '</title>';
                             $descriptionContent = $forumPost->text;
