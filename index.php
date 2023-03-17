@@ -85,7 +85,9 @@ $app->bearCMS->addons
                             $path = $request->path->get();
                             $hasSlash = substr($path, -1) === '/';
                             if (!$hasSlash) {
-                                return new App\Response\PermanentRedirect($request->getURL() . '/');
+                                $tempRequest = clone ($request);
+                                $tempRequest->path->set($path . '/');
+                                return new App\Response\PermanentRedirect($tempRequest->getURL());
                             }
 
                             $strlen = function (string $string) {
