@@ -21,7 +21,7 @@
         "bearframework/localization-addon": "1.*",
         "ivopetkov/html-server-components-bearframework-addon": "1.*",
         "ivopetkov/form-bearframework-addon": "1.*",
-        "ivopetkov/users-bearframework-addon": "1.*",
+        "ivopetkov/users-bearframework-addon": "2.*",
         "ivopetkov/server-requests-bearframework-addon": "1.*",
         "ivopetkov/client-packages-bearframework-addon": "1.*",
         "ivopetkov/form-elements-bearframework-addon": "2.*",
