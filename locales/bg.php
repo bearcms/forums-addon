@@ -14,7 +14,6 @@ return [
     'bearcms.forumPosts.Your reply' => 'Вашият отговор',
     'bearcms.forumPosts.Send' => 'Изпрати',
     'bearcms.forumPosts.Sending ...' => 'Изпращане ...',
-    'bearcms.New post in %s' => 'Нова тема в %s',
     'bearcms.forumPosts.Title' => 'Заглавие',
     'bearcms.forumPosts.Content' => 'Съдържание',
     'bearcms.forumPosts.Post' => 'Публикувай',

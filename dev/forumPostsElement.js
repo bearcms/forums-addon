@@ -29,24 +29,14 @@ bearCMS.forumPostsElement = bearCMS.forumPostsElement || (function () {
         });
     };
 
-    var _openNewPost = function (newPostServerData, lightboxContext) {
-        clientPackages.get('serverRequests').then(function (serverRequests) {
-            serverRequests.send('-bearcms-forums-new-post-form', newPostServerData).then(function (responseText) {
-                var result = JSON.parse(responseText);
-                if (typeof result.html !== 'undefined') {
-                    lightboxContext.open(result.html);
-                }
-            });
-        });
-    };
-
     var openNewPost = function (newPostServerData) {
-        clientPackages.get('lightbox').then(function (lightbox) {
-            var context = lightbox.make();
+        clientPackages.get('modalWindows').then(function (modalWindows) {
+            modalWindows.showLoading();
             clientPackages.get('users').then(function (users) {
                 users.currentUser.exists().then(function (exists) {
+                    modalWindows.hideLoading();
                     if (exists) {
-                        _openNewPost(newPostServerData, context);
+                        modalWindows.open('-bearcms-forums-new-post-form', newPostServerData);
                     } else {
                         users.openLogin();
                     }

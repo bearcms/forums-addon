@@ -164,17 +164,22 @@ $app->bearCMS->addons
                             ]);
                         }
                     }
-                })
+                });
+
+            $app->modalWindows
                 ->add('-bearcms-forums-new-post-form', function ($data) use ($app, $context) {
-                    if (isset($data['serverData'], $data['serverData'])) {
+                    if (isset($data['serverData'])) {
                         $serverData = Internal\TempClientData::get($data['serverData']);
                         if (is_array($serverData) && isset($serverData['categoryID'])) {
                             $forumCategoryID = (string) $serverData['categoryID'];
-                            $content = $app->components->process('<component src="form" filename="' . $context->dir . '/components/bearcmsForumPostsElement/forumPostNewForm.php" categoryID="' . htmlentities($forumCategoryID) . '" />');
+                            $content = '<component src="form" filename="' . $context->dir . '/components/bearcmsForumPostsElement/forumPostNewForm.php" categoryID="' . htmlentities($forumCategoryID) . '" />';
+                            $content = $app->components->process($content);
                             $content = $app->clientPackages->process($content);
-                            return json_encode([
-                                'html' => $content
-                            ]);
+                            return [
+                                'title' => __('bearcms.forumPosts.New post'),
+                                'content' => $content,
+                                'width' => '700px'
+                            ];
                         }
                     }
                 });
@@ -507,7 +512,7 @@ $app->bearCMS->addons
                     //$js = file_get_contents(__DIR__ . '/dev/forumPostsElement.js');
                     $js = include __DIR__ . '/assets/forumPostsElement.min.js.php';
                     $package->addJSCode($js);
-                    $package->embedPackage('lightbox');
+                    $package->embedPackage('modalWindows');
                 })
                 ->add('-bearcms-forums-element-reply', function (IvoPetkov\BearFrameworkAddons\ClientPackage $package) {
                     //$js = file_get_contents(__DIR__ . '/dev/forumPostReply.js');

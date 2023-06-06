@@ -15,7 +15,7 @@ $forumPostID = (string)$component->forumPostID;
 $elementID = 'frl' . md5($forumPostID);
 ?><html>
     <head>
-        <link rel="client-packages-embed" name="lightbox">
+        <link rel="client-packages-embed" name="users">
         <style>
             .bearcms-forum-post-page-reply{display:block;clear:both;zoom:1;word-wrap:break-word;}
             .bearcms-forum-post-page-reply:after{visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0;}
@@ -66,7 +66,7 @@ $elementID = 'frl' . md5($forumPostID);
                 $author = $reply->author;
                 $profile = \BearCMS\Internal\PublicProfile::getFromAuthor($author);
 
-                $onClick = 'clientPackages.get("lightbox").then(function(lightbox){lightbox.make();clientPackages.get("users").then(function(users){users.openPreview("' . $author['provider'] . '","' . $author['id'] . '");});});';
+                $onClick = 'clientPackages.get("users").then(function(users){users.openPreview("' . $author['provider'] . '","' . $author['id'] . '");});';
                 $linkAttributes = ' title="' . htmlentities($profile->name) . '" href="javascript:void(0);" onclick="' . htmlentities($onClick) . '"';
                 echo '<div class="bearcms-forum-post-page-reply">';
                 echo '<a class="bearcms-forum-post-page-reply-author-image"' . $linkAttributes . (strlen((string)$profile->imageSmall) > 0 ? ' style="background-image:url(' . htmlentities($profile->imageSmall) . ');background-size:cover;"' : ' style="background-color:rgba(0,0,0,0.2);"') . '></a>';
