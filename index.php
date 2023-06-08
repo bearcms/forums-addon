@@ -36,24 +36,22 @@ $app->bearCMS->addons
 
             Internal\ForumsData::$forumPagesPathPrefix = $forumPagesPathPrefix;
 
-            Internal\ElementsTypes::add('forumPosts', [
-                'componentSrc' => 'bearcms-forum-posts-element',
-                'componentFilename' => $context->dir . '/components/bearcmsForumPostsElement.php',
-                'fields' => [
-                    [
-                        'id' => 'categoryID',
-                        'type' => 'textbox'
-                    ],
-                    [
-                        'id' => 'count',
-                        'type' => 'number'
-                    ],
-                    [
-                        'id' => 'showRepliesCount',
-                        'type' => 'number'
-                    ]
+            $type = new \BearCMS\Internal\ElementType('forumPosts', 'bearcms-forum-posts-element', $context->dir . '/components/bearcmsForumPostsElement.php');
+            $type->properties = [
+                [
+                    'id' => 'categoryID',
+                    'type' => 'string'
+                ],
+                [
+                    'id' => 'count',
+                    'type' => 'int'
+                ],
+                [
+                    'id' => 'showRepliesCount',
+                    'type' => 'int'
                 ]
-            ]);
+            ];
+            \BearCMS\Internal\ElementsTypes::add($type);
 
             $app->routes
                 ->add([$forumPagesPathPrefix . '?', $forumPagesPathPrefix . '?/'], [
