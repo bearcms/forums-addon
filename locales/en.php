@@ -19,6 +19,8 @@ return [
     'bearcms.forumPosts.Post' => 'Post',
     'bearcms.forumPosts.Posting ...' => 'Posting ...',
     'bearcms.forumPosts.pending approval' => 'pending approval',
+    'bearcms.forumPosts.tooManyPosts' => 'You\'ve submitted to many posts for a short time. Please, try again later.',
+    'bearcms.forumPosts.tooManyReplies' => 'You\'ve submitted to many replies for a short time. Please, try again later.',
     'bearcms.notifications.forum-posts.new.pendingApproval' => 'A new post in the %s\'s forum is pending approval',
     'bearcms.notifications.forum-posts.new.thisAndOneMoreArePendingApproval' => 'A new post in the forum (by %s) and an older one are pending approval.',
     'bearcms.notifications.forum-posts.new.thisAndSomeMoreArePendingApproval' => 'A new post in the forum (by %1$s) and %2$s more older are pending approval.',

@@ -16,6 +16,10 @@ $form->constraints->setRequired('fptext');
 
 $form->onSubmit = function ($values) use ($component, $app) {
 
+    if (!$app->rateLimiter->logIP('bearcms-forums-new-form', ['4/m', '40/h'])) {
+        $this->throwError(__('bearcms.forumPosts.tooManyPosts'));
+    }
+
     $categoryID = $component->categoryID;
 
     if (!$app->currentUser->exists()) {

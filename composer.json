@@ -26,7 +26,8 @@
         "ivopetkov/client-packages-bearframework-addon": "1.*",
         "ivopetkov/form-elements-bearframework-addon": "2.*",
         "ivopetkov/modal-windows-bearframework-addon": "1.*",
-        "ivopetkov/html5-dom-document-js-bearframework-addon": "1.*"
+        "ivopetkov/html5-dom-document-js-bearframework-addon": "1.*",
+        "ivopetkov/rate-limiter-bearframework-addon": "1.*"
     },
     "require-dev": {
         "bearcms/addon-tests": "1.*"

@@ -18,6 +18,7 @@ BearFramework\Addons::register('bearcms/forums-addon', __DIR__, [
         'ivopetkov/client-packages-bearframework-addon',
         'ivopetkov/form-elements-bearframework-addon',
         'ivopetkov/modal-windows-bearframework-addon',
-        'ivopetkov/html5-dom-document-js-bearframework-addon'
+        'ivopetkov/html5-dom-document-js-bearframework-addon',
+        'ivopetkov/rate-limiter-bearframework-addon'
     ]
 ]);

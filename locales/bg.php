@@ -19,6 +19,8 @@ return [
     'bearcms.forumPosts.Post' => 'Публикувай',
     'bearcms.forumPosts.Posting ...' => 'Публикуване ...',
     'bearcms.forumPosts.pending approval' => 'очаква одобрение',
+    'bearcms.forumPosts.tooManyPosts' => 'Публикували сте твърде много теми за кратко време. Моля, опитайте по-късно.',
+    'bearcms.forumPosts.tooManyReplies' => 'Публикували сте твърде много отговори за кратко време. Моля, опитайте по-късно.',
     'bearcms.notifications.forum-posts.new.pendingApproval' => 'Нова тема във форума на %s очаква одобрение',
     'bearcms.notifications.forum-posts.new.thisAndOneMoreArePendingApproval' => 'Нова тема във форума (от %s) и една по-стара очакват одобрение.',
     'bearcms.notifications.forum-posts.new.thisAndSomeMoreArePendingApproval' => 'Нова тема във форума (от %1$s) и %2$s по-стари очакват одобрение.',

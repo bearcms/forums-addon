@@ -14,6 +14,11 @@ $context = $app->contexts->get(__DIR__);
 $form->constraints->setRequired('fprtext');
 
 $form->onSubmit = function($values) use ($component, $app, $context) {
+
+    if (!$app->rateLimiter->logIP('bearcms-forums-reply-form', ['4/m', '40/h'])) {
+        $this->throwError(__('bearcms.forumPosts.tooManyReplies'));
+    }
+
     $contextData = json_decode($values['fprcontext'], true);
     if (is_array($contextData) && isset($contextData['listElementID'])) {
         $listElementID = (string) $contextData['listElementID'];
