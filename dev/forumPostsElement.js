@@ -31,17 +31,20 @@ bearCMS.forumPostsElement = bearCMS.forumPostsElement || (function () {
 
     var openNewPost = function (newPostServerData) {
         clientPackages.get('modalWindows').then(function (modalWindows) {
-            modalWindows.showLoading();
-            clientPackages.get('users').then(function (users) {
-                users.currentUser.exists().then(function (exists) {
-                    modalWindows.hideLoading();
-                    if (exists) {
-                        modalWindows.open('-bearcms-forums-new-post-form', newPostServerData);
-                    } else {
-                        users.openLogin();
-                    }
+            modalWindows.showLoading().then(function () {
+                clientPackages.get('users').then(function (users) {
+                    users.currentUser.exists().then(function (exists) {
+                        modalWindows.hideLoading().then(function () {
+                            if (exists) {
+                                modalWindows.open('-bearcms-forums-new-post-form', newPostServerData);
+                            } else {
+                                users.openLogin();
+                            }
+                        });
+                    });
                 });
             });
+
         });
     };
 
