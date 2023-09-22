@@ -31,7 +31,7 @@ bearCMS.forumPostsElement = bearCMS.forumPostsElement || (function () {
 
     var openNewPost = function (newPostServerData) {
         clientPackages.get('modalWindows').then(function (modalWindows) {
-            modalWindows.showLoading().then(function () {
+            modalWindows.showLoading({ closeOnEscKey: false }).then(function () {
                 clientPackages.get('users').then(function (users) {
                     users.currentUser.exists().then(function (exists) {
                         modalWindows.hideLoading().then(function () {
