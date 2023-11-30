@@ -184,6 +184,13 @@ $app->bearCMS->addons
 
             Internal\Themes::$elementsOptions['forumPosts'] = function ($options, $idPrefix, $parentSelector, $context, $details) {
                 $groupForumPosts = $options->addGroup(__("bearcms.themes.options.Forum posts"));
+                $groupForumPosts->addOption($idPrefix . "ForumPostsCSS", "css", '', [
+                    "cssTypes" => ["cssPadding", "cssBorder", "cssRadius", "cssShadow", "cssBackground"],
+                    "cssOptions" => array_diff(isset($details['cssOptions']) ? $details['cssOptions'] : [], ["*/focusState"]), // all but focus state
+                    "cssOutput" => [
+                        ["selector", $parentSelector . " .bearcms-forum-posts-element"]
+                    ]
+                ]);
 
                 $groupForumPostsPost = $groupForumPosts->addGroup(__("bearcms.themes.options.forumPosts.Post"));
                 $groupForumPostsPost->addOption($idPrefix . "ForumPostsPostCSS", "css", '', [
