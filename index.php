@@ -104,6 +104,7 @@ $app->bearCMS->addons
                             $content .= '<style>'
                                 . '.bearcms-forum-post-page-title-container{word-break:break-word;}'
                                 . '.bearcms-forum-post-page-content{word-break:break-word;}'
+                                . '.bearcms-forum-post-page-content [data-form-element-type="submit-button"]{font-size:0;}'
                                 . '</style>';
                             $content .= '</head>';
                             $content .= '<body>';
@@ -250,11 +251,11 @@ $app->bearCMS->addons
                 ]);
 
                 $groupForumPostsNewPostButtonContainer = $groupForumPostsNewPostButton->addGroup(__("bearcms.themes.options.forumPosts.Container"));
-                $groupForumPostsNewPostButtonContainer->addOption($idPrefix . "ForumPostsShowMoreButtonContainerCSS", "css", '', [
+                $groupForumPostsNewPostButtonContainer->addOption($idPrefix . "ForumPostsNewPostButtonContainerCSS", "css", '', [
                     "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
                     "cssOptions" => array_diff(isset($details['cssOptions']) ? $details['cssOptions'] : [], ["*/focusState"]),
                     "cssOutput" => [
-                        ["rule", $parentSelector . " .bearcms-forum-posts-new-post-button-container", "box-sizing:border-box;"],
+                        ["rule", $parentSelector . " .bearcms-forum-posts-new-post-button-container", "box-sizing:border-box;display:flex;"],
                         ["selector", $parentSelector . " .bearcms-forum-posts-new-post-button-container"]
                     ]
                 ]);
