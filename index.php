@@ -51,6 +51,8 @@ $app->bearCMS->addons
                     'type' => 'int'
                 ]
             ];
+            $type->canStyle = true;
+            $type->canImportExport = true;
             \BearCMS\Internal\ElementsTypes::add($type);
 
             $app->routes
@@ -183,23 +185,32 @@ $app->bearCMS->addons
                     }
                 });
 
-            Internal\Themes::$elementsOptions['forumPosts'] = function ($options, $idPrefix, $parentSelector, $context, $details) {
-                $groupForumPosts = $options->addGroup(__("bearcms.themes.options.Forum posts"));
-                $groupForumPosts->addOption($idPrefix . "ForumPostsCSS", "css", '', [
+            Internal\Themes::$elementsOptions['forumPosts'] = ['v2', function ($options, $idPrefix, $parentSelector, $context, $details) {
+                $isElementContext = $context === Internal\Themes::OPTIONS_CONTEXT_ELEMENT;
+                if ($isElementContext) {
+                    $optionsGroup = $options;
+                    $defaultStyleSelector = '';
+                } else {
+                    $optionsGroup = $options->addGroup(__("bearcms.themes.options.Forum posts"));
+                    $defaultStyleSelector = ' .bearcms-element:not([class*="bearcms-element-style-"])';
+                    $optionsGroup->details['internalElementSelector'] = [$idPrefix, $parentSelector . " .bearcms-forum-posts-element"];
+                }
+
+                $optionsGroup->addOption($idPrefix . "ForumPostsCSS", "css", '', [
                     "cssTypes" => ["cssPadding", "cssBorder", "cssRadius", "cssShadow", "cssBackground"],
                     "cssOptions" => array_diff(isset($details['cssOptions']) ? $details['cssOptions'] : [], ["*/focusState"]), // all but focus state
                     "cssOutput" => [
-                        ["selector", $parentSelector . " .bearcms-forum-posts-element"]
+                        ["selector", $parentSelector . $defaultStyleSelector . "> .bearcms-forum-posts-element"]
                     ]
                 ]);
 
-                $groupForumPostsPost = $groupForumPosts->addGroup(__("bearcms.themes.options.forumPosts.Post"));
+                $groupForumPostsPost = $optionsGroup->addGroup(__("bearcms.themes.options.forumPosts.Post"));
                 $groupForumPostsPost->addOption($idPrefix . "ForumPostsPostCSS", "css", '', [
                     "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssSize"],
                     "cssOptions" => array_diff(isset($details['cssOptions']) ? $details['cssOptions'] : [], ["*/focusState"]),
                     "cssOutput" => [
                         ["rule", $parentSelector . " .bearcms-forum-posts-post", "box-sizing:border-box;"],
-                        ["selector", $parentSelector . " .bearcms-forum-posts-post"]
+                        ["selector", $parentSelector . $defaultStyleSelector . "> .bearcms-forum-posts-element .bearcms-forum-posts-post"]
                     ]
                 ]);
 
@@ -209,7 +220,7 @@ $app->bearCMS->addons
                     "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", $parentSelector . " .bearcms-forum-posts-post-title", "text-decoration:none;"],
-                        ["selector", $parentSelector . " .bearcms-forum-posts-post-title"]
+                        ["selector", $parentSelector . $defaultStyleSelector . "> .bearcms-forum-posts-element .bearcms-forum-posts-post-title"]
                     ]
                 ]);
 
@@ -218,16 +229,16 @@ $app->bearCMS->addons
                     "cssTypes" => ["cssText", "cssTextShadow"],
                     "cssOptions" => array_diff(isset($details['cssOptions']) ? $details['cssOptions'] : [], ["*/focusState"]),
                     "cssOutput" => [
-                        ["selector", $parentSelector . " .bearcms-forum-posts-post-replies-count"]
+                        ["selector", $parentSelector . $defaultStyleSelector . "> .bearcms-forum-posts-element .bearcms-forum-posts-post-replies-count"]
                     ]
                 ]);
 
-                $groupForumPostsShowMoreButton = $groupForumPosts->addGroup(__("bearcms.themes.options.forumPosts.Show more button"));
+                $groupForumPostsShowMoreButton = $optionsGroup->addGroup(__("bearcms.themes.options.forumPosts.Show more button"));
                 $groupForumPostsShowMoreButton->addOption($idPrefix . "ForumPostsShowMoreButtonCSS", "css", '', [
                     "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", $parentSelector . " .bearcms-forum-posts-show-more-button", "box-sizing:border-box;display:inline-block;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;"],
-                        ["selector", $parentSelector . " .bearcms-forum-posts-show-more-button"]
+                        ["selector", $parentSelector . $defaultStyleSelector . "> .bearcms-forum-posts-element .bearcms-forum-posts-show-more-button"]
                     ]
                 ]);
 
@@ -237,16 +248,16 @@ $app->bearCMS->addons
                     "cssOptions" => array_diff(isset($details['cssOptions']) ? $details['cssOptions'] : [], ["*/focusState"]),
                     "cssOutput" => [
                         ["rule", $parentSelector . " .bearcms-forum-posts-show-more-button-container", "box-sizing:border-box;"],
-                        ["selector", $parentSelector . " .bearcms-forum-posts-show-more-button-container"]
+                        ["selector", $parentSelector . $defaultStyleSelector . "> .bearcms-forum-posts-element .bearcms-forum-posts-show-more-button-container"]
                     ]
                 ]);
 
-                $groupForumPostsNewPostButton = $groupForumPosts->addGroup(__("bearcms.themes.options.forumPosts.New post button"));
+                $groupForumPostsNewPostButton = $optionsGroup->addGroup(__("bearcms.themes.options.forumPosts.New post button"));
                 $groupForumPostsNewPostButton->addOption($idPrefix . "ForumPostsNewPostButtonCSS", "css", '', [
                     "cssOptions" => isset($details['cssOptions']) ? $details['cssOptions'] : [],
                     "cssOutput" => [
                         ["rule", $parentSelector . " .bearcms-forum-posts-new-post-button", "box-sizing:border-box;display:inline-block;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;"],
-                        ["selector", $parentSelector . " .bearcms-forum-posts-new-post-button"]
+                        ["selector", $parentSelector . $defaultStyleSelector . "> .bearcms-forum-posts-element .bearcms-forum-posts-new-post-button"]
                     ]
                 ]);
 
@@ -256,10 +267,25 @@ $app->bearCMS->addons
                     "cssOptions" => array_diff(isset($details['cssOptions']) ? $details['cssOptions'] : [], ["*/focusState"]),
                     "cssOutput" => [
                         ["rule", $parentSelector . " .bearcms-forum-posts-new-post-button-container", "box-sizing:border-box;display:flex;"],
-                        ["selector", $parentSelector . " .bearcms-forum-posts-new-post-button-container"]
+                        ["selector", $parentSelector . $defaultStyleSelector . "> .bearcms-forum-posts-element .bearcms-forum-posts-new-post-button-container"]
                     ]
                 ]);
-            };
+
+                $containerSelector = $defaultStyleSelector . ":has(> .bearcms-forum-posts-element)";
+                $groupContainer = $optionsGroup->addGroup(__("bearcms.themes.options.Container"));
+                $groupContainer->addOption($idPrefix . "ForumPostsContainerCSS", "css", '', [
+                    "cssTypes" => ["cssPadding", "cssMargin", "cssBorder", "cssRadius", "cssShadow", "cssBackground", "cssTextAlign", "cssSize", "cssTransform"],
+                    "cssOptions" => ["*/hoverState", "*/activeState", "*/visibilityState", "*/sizeState", "*/screenSizeState", "*/pageTypeState", "*/tagsState"],
+                    "cssOutput" => [
+                        ["rule", $parentSelector . $containerSelector, "box-sizing:border-box;"],
+                        ["selector", $parentSelector . $containerSelector]
+                    ]
+                ]);
+
+                if ($isElementContext) {
+                    $groupContainer->addVisibility($idPrefix . "ForumPostsContainerVisibility", $parentSelector . $containerSelector);
+                }
+            }];
 
             Internal\Themes::$pagesOptions['forums'] = function ($options, array $details = []) {
 
