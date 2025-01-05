@@ -63,7 +63,7 @@ class ForumPosts
     public function getList()
     {
         $list = \BearCMS\Internal\Data::getList('bearcms/forums/posts/post/');
-        array_walk($list, function (&$value) {
+        array_walk($list, function (&$value): void {
             $value = $this->makeForumPostFromRawData($value);
         });
         return new \IvoPetkov\DataList($list);

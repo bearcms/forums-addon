@@ -58,7 +58,7 @@ $elementID = 'frl' . md5($forumPostID);
                 return implode('', $newTextParts);
             };
 
-            $renderItem = function($reply) use ($app, $urlsToHTML) {
+            $renderItem = function($reply) use ($app, $urlsToHTML): void {
                 $statusText = '';
                 if ($reply->status === 'pendingApproval') {
                     $statusText = __('bearcms.forumPosts.pending approval') . ', ';

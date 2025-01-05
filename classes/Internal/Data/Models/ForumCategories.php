@@ -55,7 +55,7 @@ class ForumCategories
     {
         if (!isset(self::$cache['list'])) {
             $list = \BearCMS\Internal\Data::getList('bearcms/forums/categories/category/');
-            array_walk($list, function (&$value) {
+            array_walk($list, function (&$value): void {
                 $value = $this->makeForumCategoryFromRawData($value);
             });
 

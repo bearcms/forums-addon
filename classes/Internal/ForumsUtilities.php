@@ -44,7 +44,7 @@ class ForumsUtilities
     static function getIDFromSlug(string $slug): string
     {
         $temp = explode('-', $slug);
-        return $temp[sizeof($temp) - 1];
+        return $temp[count($temp) - 1];
     }
 
 }

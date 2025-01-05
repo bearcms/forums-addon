@@ -13,8 +13,8 @@ use BearCMS\Internal;
 $app = App::get();
 
 $app->bearCMS->addons
-    ->register('bearcms/forums-addon', function (\BearCMS\Addons\Addon $addon) use ($app) {
-        $addon->initialize = function (array $options) use ($app) {
+    ->register('bearcms/forums-addon', function (\BearCMS\Addons\Addon $addon) use ($app): void {
+        $addon->initialize = function (array $options) use ($app): void {
             $forumPagesPathPrefix = isset($options['forumPagesPathPrefix']) ? $options['forumPagesPathPrefix'] : '/f/';
 
             $context = $app->contexts->get(__DIR__);
@@ -94,7 +94,7 @@ $app->bearCMS->addons
                                 return function_exists('mb_strlen') ? mb_strlen($string) : strlen($string);
                             };
 
-                            $substr = function (string $string, int $start, int $length = null) {
+                            $substr = function (string $string, int $start, ?int $length = null) {
                                 return function_exists('mb_substr') ? mb_substr($string, $start, $length) : substr($string, $start, $length);
                             };
 
@@ -131,7 +131,7 @@ $app->bearCMS->addons
                     }
                 ]);
 
-            Internal\Sitemap::addSource(function (Internal\Sitemap\Sitemap $sitemap) use ($app) {
+            Internal\Sitemap::addSource(function (Internal\Sitemap\Sitemap $sitemap) use ($app): void {
                 $forumPosts = new Internal\Data\Models\ForumPosts();
                 $posts = $forumPosts->getList()
                     ->filter(function ($forumPost) {
@@ -185,7 +185,7 @@ $app->bearCMS->addons
                     }
                 });
 
-            Internal\Themes::$elementsOptions['forumPosts'] = ['v2', function ($options, $idPrefix, $parentSelector, $context, $details) {
+            Internal\Themes::$elementsOptions['forumPosts'] = ['v2', function ($options, $idPrefix, $parentSelector, $context, $details): void {
                 $isElementContext = $context === Internal\Themes::OPTIONS_CONTEXT_ELEMENT;
                 if ($isElementContext) {
                     $optionsGroup = $options;
@@ -287,7 +287,7 @@ $app->bearCMS->addons
                 }
             }];
 
-            Internal\Themes::$pagesOptions['forums'] = function ($options, array $details = []) {
+            Internal\Themes::$pagesOptions['forums'] = function ($options, array $details = []): void {
 
                 $groupForumPostPage = $options->addGroup(__("bearcms.themes.options.Forum post page"));
 
@@ -439,7 +439,7 @@ $app->bearCMS->addons
                 }
             });
 
-            Internal\ServerCommands::add('forumPostSetStatus', function (array $data) {
+            Internal\ServerCommands::add('forumPostSetStatus', function (array $data): void {
                 Internal\Data\Utilities\ForumPosts::setStatus($data['forumPostID'], $data['status']);
             });
 
@@ -483,12 +483,12 @@ $app->bearCMS->addons
                 return null;
             });
 
-            Internal\ServerCommands::add('forumPostReplySetStatus', function (array $data) use (&$forumPostsRepliesListCache) {
+            Internal\ServerCommands::add('forumPostReplySetStatus', function (array $data) use (&$forumPostsRepliesListCache): void {
                 Internal\Data\Utilities\ForumPostsReplies::setStatus($data['forumPostID'], $data['replyID'], $data['status']);
                 $forumPostsRepliesListCache = null;
             });
 
-            Internal\ServerCommands::add('forumPostReplyDelete', function (array $data) use (&$forumPostsRepliesListCache) {
+            Internal\ServerCommands::add('forumPostReplyDelete', function (array $data) use (&$forumPostsRepliesListCache): void {
                 Internal\Data\Utilities\ForumPostsReplies::deleteReplyForever($data['forumPostID'], $data['replyID']);
                 $forumPostsRepliesListCache = null;
             });
@@ -509,7 +509,7 @@ $app->bearCMS->addons
 
             if (Internal\Config::hasFeature('NOTIFICATIONS')) {
                 $app->tasks
-                    ->define('bearcms-send-new-forum-post-notification', function ($data) {
+                    ->define('bearcms-send-new-forum-post-notification', function ($data): void {
                         $forumPostID = $data['forumPostID'];
                         $forumPosts = new Internal\Data\Models\ForumPosts();
                         $forumPost = $forumPosts->get($forumPostID);
@@ -521,7 +521,7 @@ $app->bearCMS->addons
                             Internal\Data::sendNotification('forum-posts', $forumPost->status, $profile->name, $forumPost->title, $pendingApprovalCount);
                         }
                     })
-                    ->define('bearcms-send-new-forum-post-reply-notification', function ($data) {
+                    ->define('bearcms-send-new-forum-post-reply-notification', function ($data): void {
                         $forumPostID = $data['forumPostID'];
                         $forumPostReplyID = $data['forumPostReplyID'];
                         $forumPostsReplies = new Internal\Data\Models\ForumPostsReplies();
@@ -540,13 +540,13 @@ $app->bearCMS->addons
             }
 
             $app->clientPackages
-                ->add('-bearcms-forums-element', function (IvoPetkov\BearFrameworkAddons\ClientPackage $package) {
+                ->add('-bearcms-forums-element', function (IvoPetkov\BearFrameworkAddons\ClientPackage $package): void {
                     //$js = file_get_contents(__DIR__ . '/dev/forumPostsElement.js');
                     $js = include __DIR__ . '/assets/forumPostsElement.min.js.php';
                     $package->addJSCode($js);
                     $package->embedPackage('modalWindows');
                 })
-                ->add('-bearcms-forums-element-reply', function (IvoPetkov\BearFrameworkAddons\ClientPackage $package) {
+                ->add('-bearcms-forums-element-reply', function (IvoPetkov\BearFrameworkAddons\ClientPackage $package): void {
                     //$js = file_get_contents(__DIR__ . '/dev/forumPostReply.js');
                     $js = include __DIR__ . '/assets/forumPostReply.min.js.php';
                     $package->addJSCode($js);
