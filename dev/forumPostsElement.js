@@ -20,7 +20,7 @@ bearCMS.forumPostsElement = bearCMS.forumPostsElement || (function () {
         button.innerHTML += " ...";
         var listElement = button.parentNode.parentNode;
         clientPackages.get('serverRequests').then(function (serverRequests) {
-            var requestData = [];
+            var requestData = {};
             requestData['serverData'] = data['serverData'];
             serverRequests.send('-bearcms-forumposts-load-more', requestData).then(function (responseText) {
                 var result = JSON.parse(responseText);
