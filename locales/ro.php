@@ -1,0 +1,57 @@
+<?php
+
+/*
+ * Forums addon for Bear CMS
+ * https://github.com/bearcms/forums-addon
+ * Copyright (c) Amplilabs Ltd.
+ * Free to use under the MIT license.
+ */
+return [
+    'bearcms.forumPosts.New post' => 'Subiect nou',
+    'bearcms.forumPosts.Show more' => 'Afișează mai multe',
+    'bearcms.forumPosts.%s replies' => '%s răspunsuri',
+    'bearcms.forumPosts.1 reply' => '1 răspuns',
+    'bearcms.forumPosts.Your reply' => 'Răspunsul tău',
+    'bearcms.forumPosts.Send' => 'Trimite',
+    'bearcms.forumPosts.Sending ...' => 'Se trimite...',
+    'bearcms.forumPosts.Title' => 'Titlu',
+    'bearcms.forumPosts.Content' => 'Conținut',
+    'bearcms.forumPosts.Post' => 'Postează',
+    'bearcms.forumPosts.Posting ...' => 'Se postează...',
+    'bearcms.forumPosts.pending approval' => 'în așteptarea aprobării',
+    'bearcms.forumPosts.tooManyPosts' => 'Ai trimis prea multe postări într-un timp scurt. Te rugăm să încerci din nou mai târziu.',
+    'bearcms.forumPosts.tooManyReplies' => 'Ai trimis prea multe răspunsuri într-un timp scurt. Te rugăm să încerci din nou mai târziu.',
+    'bearcms.notifications.forum-posts.new.pendingApproval' => 'O postare nouă în forumul %s așteaptă aprobarea',
+    'bearcms.notifications.forum-posts.new.thisAndOneMoreArePendingApproval' => 'O postare nouă în forum (de la %s) și una mai veche așteaptă aprobarea.',
+    'bearcms.notifications.forum-posts.new.thisAndSomeMoreArePendingApproval' => 'O postare nouă în forum (de la %1$s) și alte %2$s mai vechi așteaptă aprobarea.',
+    'bearcms.notifications.forum-posts.new.notPendingApproval' => 'Postare nouă în forumul %s',
+    'bearcms.notifications.forum-posts.new.oneOtherIsPendingApproval' => 'O postare nouă în forum (de la %s). Încă una așteaptă aprobarea.',
+    'bearcms.notifications.forum-posts.new.manyOthersArePendingApproval' => 'O postare nouă în forum (de la %1$s). Alte %2$s mai vechi așteaptă aprobarea.',
+    'bearcms.notifications.forum-posts-replies.new.pendingApproval' => 'Un răspuns nou la o postare din forumul %s așteaptă aprobarea',
+    'bearcms.notifications.forum-posts-replies.new.thisAndOneMoreArePendingApproval' => 'Un răspuns nou la o postare din forum (de la %s) și unul mai vechi așteaptă aprobarea.',
+    'bearcms.notifications.forum-posts-replies.new.thisAndSomeMoreArePendingApproval' => 'Un răspuns nou la o postare din forum (de la %1$s) și alte %2$s mai vechi așteaptă aprobarea.',
+    'bearcms.notifications.forum-posts-replies.new.notPendingApproval' => 'Răspuns nou la o postare din forumul %s',
+    'bearcms.notifications.forum-posts-replies.new.oneOtherIsPendingApproval' => 'Un răspuns nou la o postare din forum (de la %s). Încă unul așteaptă aprobarea.',
+    'bearcms.notifications.forum-posts-replies.new.manyOthersArePendingApproval' => 'Un răspuns nou la o postare din forum (de la %1$s). Alte %2$s mai vechi așteaptă aprobarea.',
+    'bearcms.themes.options.Forum posts' => 'Postări forum',
+    'bearcms.themes.options.forumPosts.Post' => 'Postare',
+    'bearcms.themes.options.forumPosts.Title' => 'Titlu',
+    'bearcms.themes.options.forumPosts.Replies count' => 'Număr răspunsuri',
+    'bearcms.themes.options.forumPosts.Show more button' => 'Buton afișează mai multe',
+    'bearcms.themes.options.forumPosts.Container' => 'Container',
+    'bearcms.themes.options.forumPosts.New post button' => 'Buton postare nouă',
+    'bearcms.themes.options.Forum post page' => 'Pagina postării',
+    'bearcms.themes.options.forumPostPage.Title' => 'Titlu',
+    'bearcms.themes.options.forumPostPage.Container' => 'Container',
+    'bearcms.themes.options.forumPostPage.Date' => 'Dată',
+    'bearcms.themes.options.forumPostPage.Content' => 'Conținut',
+    'bearcms.themes.options.forumPostPage.Reply' => 'Răspuns',
+    'bearcms.themes.options.forumPostPage.Author name' => 'Nume autor',
+    'bearcms.themes.options.forumPostPage.Author image' => 'Imagine autor',
+    'bearcms.themes.options.forumPostPage.Date' => 'Dată',
+    'bearcms.themes.options.forumPostPage.Text' => 'Text',
+    'bearcms.themes.options.forumPostPage.Text links' => 'Link-uri text',
+    'bearcms.themes.options.forumPostPage.Text input' => 'Câmp text',
+    'bearcms.themes.options.forumPostPage.Send button' => 'Buton trimitere',
+    'bearcms.themes.options.forumPostPage.Send button waiting' => 'Se așteaptă...',
+];
