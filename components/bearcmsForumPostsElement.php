@@ -22,18 +22,23 @@ if ($count < 1) {
 $showRepliesCount = strlen((string)$component->showRepliesCount) > 0 ? (int) $component->showRepliesCount > 0 : true;
 $categoryID = $component->categoryID;
 
+$forumCategories = new \BearCMS\Internal\Data\Models\ForumCategories();
+$forumCategory = $forumCategories->get($categoryID);
+
 $content = '<div' . ($isFullHtmlOutputType ? ' class="bearcms-forum-posts-element"' : '') . '>';
 
-$content .= '<component src="file:' . $context->dir . '/components/bearcmsForumPostsElement/forumPostsList.php" count="' . htmlentities($count) . '" categoryID="' . htmlentities((string)$categoryID) . '" showRepliesCount="' . (int) $showRepliesCount . '" output-type="' . $outputType . '"/>';
+if ($forumCategory !== null && $forumCategory->status === "published") {
+    $content .= '<component src="file:' . $context->dir . '/components/bearcmsForumPostsElement/forumPostsList.php" count="' . htmlentities($count) . '" categoryID="' . htmlentities((string)$categoryID) . '" showRepliesCount="' . (int) $showRepliesCount . '" output-type="' . $outputType . '"/>';
 
-if ($isFullHtmlOutputType) {
-    $content .= '<div class="bearcms-forum-posts-new-post-button-container">';
-    $newPostData = [
-        'serverData' => \BearCMS\Internal\TempClientData::set(['categoryID' => $categoryID])
-    ];
-    $onClick = 'bearCMS.forumPostsElement.openNewPost(' . json_encode($newPostData) . ');';
-    $content .= '<a class="bearcms-forum-posts-new-post-button" href="javascript:void(0);" onclick="' . htmlentities($onClick) . '">' . __('bearcms.forumPosts.New post') . '</a>';
-    $content .= '</div>';
+    if ($isFullHtmlOutputType) {
+        $content .= '<div class="bearcms-forum-posts-new-post-button-container">';
+        $newPostData = [
+            'serverData' => \BearCMS\Internal\TempClientData::set(['categoryID' => $categoryID])
+        ];
+        $onClick = 'bearCMS.forumPostsElement.openNewPost(' . json_encode($newPostData) . ');';
+        $content .= '<a class="bearcms-forum-posts-new-post-button" href="javascript:void(0);" onclick="' . htmlentities($onClick) . '">' . __('bearcms.forumPosts.New post') . '</a>';
+        $content .= '</div>';
+    }
 }
 
 $content .= '</div>';

@@ -67,6 +67,13 @@ $app->bearCMS->addons
                         $forumPosts = new Internal\Data\Models\ForumPosts();
                         $forumPost = $forumPosts->get($forumPostID);
                         if ($forumPost !== null) {
+                            $forumCategories = new \BearCMS\Internal\Data\Models\ForumCategories();
+                            $forumCategory = $forumCategories->get($forumPost->categoryID);
+                            if ($forumCategory !== null && $forumCategory->status === "published") {
+                            } else {
+                                return;
+                            }
+
                             $realSlug = Internal\ForumsUtilities::getSlug($forumPost->id, $forumPost->title);
                             if ($realSlug !== $forumPostSlug) {
                                 $newUrl = $app->urls->get($forumPagesPathPrefix . $realSlug . '/');
@@ -88,7 +95,7 @@ $app->bearCMS->addons
                             $path = $request->path->get();
                             $hasSlash = substr($path, -1) === '/';
                             if (!$hasSlash) {
-                                $tempRequest = clone ($request);
+                                $tempRequest = clone($request);
                                 $tempRequest->path->set($path . '/');
                                 return new App\Response\PermanentRedirect($tempRequest->getURL());
                             }
